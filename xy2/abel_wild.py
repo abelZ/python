@@ -126,8 +126,14 @@ class xy2_wild:
                         pyautogui.keyUp('alt')
                         time.sleep(0.5)
                         pyautogui.rightClick(
-                            x_offset+abel_window.drug_pos[0],
-                            y_offset+abel_window.drug_pos[1]
+                            random.randint(
+                                x_offset+abel_window.drug_pos[0],
+                                x_offset+abel_window.drug_pos[2]
+                            ),
+                            random.randint(
+                                y_offset+abel_window.drug_pos[1],
+                                y_offset+abel_window.drug_pos[3]
+                            )
                         )
                         time.sleep(0.5)
                         pyautogui.keyDown('alt')
