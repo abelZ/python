@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 import win32gui, re
 
 s_not_moved = 'not moved'

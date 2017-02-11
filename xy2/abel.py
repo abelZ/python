@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import random, sys, time, socket, os
 from termcolor import colored
 import colorama
