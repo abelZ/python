@@ -6,7 +6,7 @@ import cv2
 import pyscreenshot as ImageGrab
 import pyautogui
 import win32gui
-import time
+import time, random
 
 class xy2_xiu:
     def __init__(self, number = 1):

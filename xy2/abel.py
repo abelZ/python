@@ -9,11 +9,12 @@ from multiprocessing import freeze_support
 import winsound, ctypes
 import win32gui
 
-import abel_window, abel_xiu, abel_wild, abel_nao
+import abel_window, abel_xiu, abel_wild, abel_nao, abel_bidou
 
 xiu_task = abel_xiu.xy2_xiu()
 wild_task = abel_wild.xy2_wild()
 nao_task = abel_nao.xy2_nao(number=5)
+bidou_task = abel_bidou.xy2_bidou(number=4)
 def xiu_thread():
     global xiu_task
     xiu_task.run_task()
@@ -25,6 +26,10 @@ def wild_thread():
 def nao_thead():
     global nao_task
     nao_task.run_task()
+
+def bidou_thread():
+    global bidou_task
+    bidou_task.run_task()
 
 def server_thread(task_type, ip):
     global wild_task
@@ -50,6 +55,8 @@ def client_thread(task_type):
         elif task_type == '-xiu':
             role_status = xiu_task.role_status
         elif task_type == '-nao':
+            role_status = nao_task.role_status
+        elif task_type == '-bidou':
             role_status = nao_task.role_status
         else:
             role_status = ''
@@ -152,6 +159,14 @@ if __name__ == '__main__':
             t.daemon = True
             t.start()
             tc = threading.Thread(target=client_thread, args=('-nao',))
+            tc.daemon = True
+            tc.start()
+            waiting()
+        elif len(sys.argv) >= 3 and sys.argv[2] == '-bidou':
+            t = threading.Thread(target=bidou_thread)
+            t.daemon = True
+            t.start()
+            tc = threading.Thread(target=client_thread, args=('-bidou',))
             tc.daemon = True
             tc.start()
             waiting()
