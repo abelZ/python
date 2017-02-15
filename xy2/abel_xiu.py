@@ -98,9 +98,6 @@ class xy2_xiu:
                 min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
                 print 'team match %f' % max_val
                 if max_val < 4500000.0:
-                    if out_fight_count > 0:
-                        in_out_fight_count = in_out_fight_count + 1
-                        out_fight_count = 0
                     x_anim_fight_begin = x_offset + abel_window.animal_fight_pos[0]
                     y_anim_fight_begin = y_offset + abel_window.animal_fight_pos[1]
                     x_anim_fight_end = x_anim_fight_begin + abel_window.animal_fight_pos[2]
@@ -125,6 +122,9 @@ class xy2_xiu:
                             self.role_status = abel_window.s_not_in_team
                             check_in_team_count = 0
                     else:
+                        if out_fight_count > 0:
+                            in_out_fight_count = in_out_fight_count + 1
+                            out_fight_count = 0
                         check_in_team_count = 0
                         self.role_status = abel_window.s_in_team
                         if in_out_fight_count >= 4:
