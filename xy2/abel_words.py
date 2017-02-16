@@ -4,21 +4,22 @@
 import abel_window, abel_log
 import cv2
 import pytesseract
+import pyscreenshot as ImageGrab
 from PIL import Image
 import time, random
 import pyautogui
 
-def get_bxxm_task_description(x_offset, y_offset):
+def get_bxxm_task_description(x_offset, y_offset, pos):
     pyautogui.keyDown('alt')
     pyautogui.press('q')
     pyautogui.keyUp('alt')
     time.sleep(0.5)
     im_head = ImageGrab.grab(
         bbox=(
-            x_offset + abel_window.bxxm_pos[0],
-            y_offset + abel_window.bxxm_pos[1],
-            x_offset + abel_window.bxxm_pos[2],
-            y_offset + abel_window.bxxm_pos[3]
+            x_offset + pos[0],
+            y_offset + pos[1],
+            x_offset + pos[2],
+            y_offset + pos[3]
         )
     )
     pyautogui.keyDown('alt')
@@ -37,16 +38,10 @@ def get_bxxm_task_description(x_offset, y_offset):
         lang='chi_sim',
         boxes=True,
         cmd=tesseract_cmd
-    )
-    log_text = None
-    log_code = None
-    for line in original.split('\n'):
-        word = line.split()[0]
-        log_code += repr(word)
-        log_text += word
-        text4= text3.replace('\xe3\x80\x94', '(').\
+    ).replace('\xe3\x80\x94', '(').\
             replace('\xe3\x80\x95', ')').\
             replace('\xef\xbc\x8c', ',').\
+            replace('\xe2\x80\xb2', ',').\
             replace('誓主', '往').\
             replace('窄查', '松').\
             replace('木木', '林').\
@@ -64,6 +59,7 @@ def get_bxxm_task_description(x_offset, y_offset):
             replace('哇', '4').\
             replace('喹', '4').\
             replace('?', '7').\
+            replace('T', '7').\
             replace('\xe8\x8e\x92', '营').\
             replace('茅寺', '持').\
             replace('琶彗', '智慧').\
@@ -96,6 +92,12 @@ def get_bxxm_task_description(x_offset, y_offset):
             replace('妊', '妖').\
             replace('炊二', '火').\
             replace('f壬', '任')
+    log_code = ''
+    vec_text = []
+    for line in original.split('\n'):
+        word = line.split()[0]
+        log_code += repr(word)
+        log_code += word
+        vec_text.append(word)
     abel_log.write_to_log(log_code)
-    abel_log.write_to_log(log_text)
-    return log_text
+    return vec_text
