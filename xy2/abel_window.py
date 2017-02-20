@@ -50,3 +50,32 @@ class WindowMgr:
         """put the window in the foreground"""
         win32gui.SetForegroundWindow(self._handle)
 
+def clickAuto(count):
+    for i in range(count):
+        pyautogui.keyDown('alt')
+        pyautogui.press('8')
+        pyautogui.keyUp('alt')
+        if self.count > 1:
+            pyautogui.keyDown('ctrl')
+            pyautogui.press('tab')
+            pyautogui.keyUp('ctrl')
+
+def clickDrug(x_offset, y_offset):
+    pyautogui.keyDown('alt')
+    pyautogui.press('e')
+    pyautogui.keyUp('alt')
+    time.sleep(0.5)
+    pyautogui.rightClick(
+        random.randint(
+            x_offset+abel_window.drug_pos[0],
+            x_offset+abel_window.drug_pos[2]
+        ),
+        random.randint(
+            y_offset+abel_window.drug_pos[1],
+            y_offset+abel_window.drug_pos[3]
+        )
+    )
+    time.sleep(0.5)
+    pyautogui.keyDown('alt')
+    pyautogui.press('e')
+    pyautogui.keyUp('alt')
