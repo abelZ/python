@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import win32gui, re
+import time, random
+import pyautogui
 
 s_not_moved = 'not moved'
 s_not_in_team = 'not in team'
@@ -21,9 +23,12 @@ box_pos = [343, 367, 354, 390]
 bidou_pos = [507, 408, 593, 423]
 bxxm_pos = [376, 232, 636, 286]
 coordinate_pos = [20,63,143,84]
+blue_enough_pos = [750, 89, 752, 90]#[730,89,800,90]
 
 wild_pos = [[283,231], [468,283], [378,451], [270,388], [530,367]]
 nao_pos = [[0,0], [0,0], [0,0], [0,0], [0,0]]
+
+blue_range = [0, 100]
 
 class WindowMgr:
     """Encapsulates some calls to the winapi for window management"""
@@ -55,7 +60,7 @@ def clickAuto(count):
         pyautogui.keyDown('alt')
         pyautogui.press('8')
         pyautogui.keyUp('alt')
-        if self.count > 1:
+        if count > 1:
             pyautogui.keyDown('ctrl')
             pyautogui.press('tab')
             pyautogui.keyUp('ctrl')
@@ -67,12 +72,12 @@ def clickDrug(x_offset, y_offset):
     time.sleep(0.5)
     pyautogui.rightClick(
         random.randint(
-            x_offset+abel_window.drug_pos[0],
-            x_offset+abel_window.drug_pos[2]
+            x_offset+drug_pos[0],
+            x_offset+drug_pos[2]
         ),
         random.randint(
-            y_offset+abel_window.drug_pos[1],
-            y_offset+abel_window.drug_pos[3]
+            y_offset+drug_pos[1],
+            y_offset+drug_pos[3]
         )
     )
     time.sleep(0.5)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import abel_window, abel_words
+import abel_window, abel_words, abel_checking
 import pyscreenshot as ImageGrab
 import win32gui
 import pyautogui
@@ -63,4 +63,14 @@ if __name__ == '__main__':
         time.sleep(0.5)
         pyautogui.click(x_offset+233, y_offset+377)
         print abel_words.get_bxxm_task_description(x_offset, y_offset, abel_window.coordinate_pos)
+    elif sys.argv[1] == '-blue':
+        w = abel_window.WindowMgr()
+        w.find_window_wildcard(".*Revision.*ID.*")
+        w.set_foreground()
+        rect                 = win32gui.GetWindowRect(w._handle)
+        x_offset             = rect[0]
+        y_offset             = rect[1]
+        print abel_checking.checkInRange(box=[x_offset+750,y_offset+89,x_offset+752,y_offset+90], lower=0, upper=100)
+        # mask = cv2.inRange(im, numpy.array(lower, dtype='uint8'), numpy.array(upper, dtype='uint8'))
+        # return cv2.countNonZero(mask) == w*h
 

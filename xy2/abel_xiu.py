@@ -32,40 +32,41 @@ class xy2_xiu:
         y_head_begin  = self.y_offset + abel_window.head_pos[1]
         x_head_end    = x_head_begin + abel_window.head_pos[2]
         y_head_end    = y_head_begin + abel_window.head_pos[3]
-        self.cv_template = abel_checking.grabImage(
+        self.cv_template,w,h = abel_checking.grabImage(
             box=[x_head_begin, y_head_begin, x_head_end, y_head_end]
         )
         x_anim_begin = self.x_offset + abel_window.animal_pos[0]
         y_anim_begin = self.y_offset + abel_window.animal_pos[1]
         x_anim_end   = x_anim_begin + abel_window.animal_pos[2]
         y_anim_end   = y_anim_begin + abel_window.animal_pos[3]
-        self.cv_template2 = abel_checking.grabImage(
+        self.cv_template2,w,h = abel_checking.grabImage(
             box=[x_anim_begin, y_anim_begin, x_anim_end, y_anim_end]
         )
+        return True
 
     def run_task(self):
         drink_drug          = False
         in_out_fight_count  = 0
         out_fight_count     = 0
         check_in_team_count = 0
-        if !prepareEnvironment():
+        if self.prepareEnvironment() == False:
             return
 
         while self.bquit == False:
             try:
                 time.sleep(1)
                 #check if it's in team
-                x_team_begin = x_offset + abel_window.team_pos[0]
-                y_team_begin = y_offset + abel_window.team_pos[1]
+                x_team_begin = self.x_offset + abel_window.team_pos[0]
+                y_team_begin = self.y_offset + abel_window.team_pos[1]
                 x_team_end = x_team_begin + abel_window.team_pos[2]
                 y_team_end = y_team_begin + abel_window.team_pos[3]
                 b_in_team = abel_checking.check_out_fight_in_team(
                     box=[x_team_begin, y_team_begin, x_team_end, y_team_end],
                     template = self.cv_template
                 )
-                if !b_in_team:
-                    x_anim_fight_begin = x_offset + abel_window.animal_fight_pos[0]
-                    y_anim_fight_begin = y_offset + abel_window.animal_fight_pos[1]
+                if b_in_team == False:
+                    x_anim_fight_begin = self.x_offset + abel_window.animal_fight_pos[0]
+                    y_anim_fight_begin = self.y_offset + abel_window.animal_fight_pos[1]
                     x_anim_fight_end = x_anim_fight_begin + abel_window.animal_fight_pos[2]
                     y_anim_fight_end = y_anim_fight_begin + abel_window.animal_fight_pos[3]
                     b_in_fight = abel_checking.check_if_in_fight(
@@ -74,9 +75,10 @@ class xy2_xiu:
                             y_anim_fight_begin,
                             x_anim_fight_end,
                             y_anim_fight_end
-                        ]
+                        ],
+                        template = self.cv_template2
                     )
-                    if !b_in_fight:
+                    if b_in_fight == False:
                         check_in_team_count = check_in_team_count + 1
                         if check_in_team_count == 5:
                             self.role_status = abel_window.s_not_in_team
@@ -104,11 +106,17 @@ class xy2_xiu:
                     if drink_drug:
                         drink_drug = False
                         b_need_drug = abel_checking.checkInRange(
-                            box=[],
-                            lower=[],
-                            upper=[]
+                            box=[
+                                self.x_offset+abel_window.blue_enough_pos[0],
+                                self.y_offset+abel_window.blue_enough_pos[1],
+                                self.x_offset+abel_window.blue_enough_pos[2],
+                                self.y_offset+abel_window.blue_enough_pos[3]
+                            ],
+                            lower=[abel_window.blue_range[0]],
+                            upper=[abel_window.blue_range[1]]
                         )
                         if b_need_drug:
+                            print "drink drug"
                             abel_window.clickDrug(self.x_offset, self.y_offset)
             except:
                 pass
