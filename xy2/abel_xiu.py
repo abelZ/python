@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import abel_window, abel_checking
+import abel_window
 import cv2
 import pyscreenshot as ImageGrab
 import pyautogui
@@ -17,7 +17,11 @@ class xy2_xiu:
     def quit(self):
         self.bquit = True
 
-    def prepareEnvironment(self):
+    def run_task(self):
+        drink_drug          = False
+        in_out_fight_count  = 0
+        out_fight_count     = 0
+        check_in_team_count = 0
         w = abel_window.WindowMgr()
         w.find_window_wildcard(".*Revision.*ID.*")
         if w._find == False:
@@ -25,60 +29,11 @@ class xy2_xiu:
             return False
 
         w.set_foreground()
-        rect          = win32gui.GetWindowRect(w._handle)
-        self.x_offset = rect[0]
-        self.y_offset = rect[1]
-        x_head_begin  = self.x_offset + abel_window.head_pos[0]
-        y_head_begin  = self.y_offset + abel_window.head_pos[1]
-        x_head_end    = x_head_begin + abel_window.head_pos[2]
-        y_head_end    = y_head_begin + abel_window.head_pos[3]
-        self.cv_template,w,h = abel_checking.grabImage(
-            box=[x_head_begin, y_head_begin, x_head_end, y_head_end]
-        )
-        x_anim_begin = self.x_offset + abel_window.animal_pos[0]
-        y_anim_begin = self.y_offset + abel_window.animal_pos[1]
-        x_anim_end   = x_anim_begin + abel_window.animal_pos[2]
-        y_anim_end   = y_anim_begin + abel_window.animal_pos[3]
-        self.cv_template2,w,h = abel_checking.grabImage(
-            box=[x_anim_begin, y_anim_begin, x_anim_end, y_anim_end]
-        )
-        return True
-
-    def run_task(self):
-        drink_drug          = False
-        in_out_fight_count  = 0
-        out_fight_count     = 0
-        check_in_team_count = 0
-        if self.prepareEnvironment() == False:
-            return
-
         while self.bquit == False:
             try:
                 time.sleep(1)
-                #check if it's in team
-                x_team_begin = self.x_offset + abel_window.team_pos[0]
-                y_team_begin = self.y_offset + abel_window.team_pos[1]
-                x_team_end = x_team_begin + abel_window.team_pos[2]
-                y_team_end = y_team_begin + abel_window.team_pos[3]
-                b_in_team = abel_checking.check_out_fight_in_team(
-                    box=[x_team_begin, y_team_begin, x_team_end, y_team_end],
-                    template = self.cv_template
-                )
-                if b_in_team == False:
-                    x_anim_fight_begin = self.x_offset + abel_window.animal_fight_pos[0]
-                    y_anim_fight_begin = self.y_offset + abel_window.animal_fight_pos[1]
-                    x_anim_fight_end = x_anim_fight_begin + abel_window.animal_fight_pos[2]
-                    y_anim_fight_end = y_anim_fight_begin + abel_window.animal_fight_pos[3]
-                    b_in_fight = abel_checking.check_if_in_fight(
-                        box=[
-                            x_anim_fight_begin,
-                            y_anim_fight_begin,
-                            x_anim_fight_end,
-                            y_anim_fight_end
-                        ],
-                        template = self.cv_template2
-                    )
-                    if b_in_fight == False:
+                if w.check_out_fight_in_team() == False:
+                    if w.check_if_in_fight() == False:
                         check_in_team_count = check_in_team_count + 1
                         if check_in_team_count == 5:
                             self.role_status = abel_window.s_not_in_team
@@ -92,7 +47,7 @@ class xy2_xiu:
                         self.role_status = abel_window.s_in_team
                         if in_out_fight_count >= 5:
                             in_out_fight_count = 0
-                            abel_window.clickAuto(self.count)
+                            w.clickAuto(self.count)
                 else:
                     check_in_team_count = 0
                     if self.role_status != abel_window.s_not_moved:
@@ -105,19 +60,9 @@ class xy2_xiu:
 
                     if drink_drug:
                         drink_drug = False
-                        b_need_drug = abel_checking.checkInRange(
-                            box=[
-                                self.x_offset+abel_window.blue_enough_pos[0],
-                                self.y_offset+abel_window.blue_enough_pos[1],
-                                self.x_offset+abel_window.blue_enough_pos[2],
-                                self.y_offset+abel_window.blue_enough_pos[3]
-                            ],
-                            lower=[abel_window.blue_range[0]],
-                            upper=[abel_window.blue_range[1]]
-                        )
-                        if b_need_drug:
+                        if w.checkBlueEnough() == False:
                             print "drink drug"
-                            abel_window.clickDrug(self.x_offset, self.y_offset)
+                            w.clickDrug()
             except:
                 pass
 

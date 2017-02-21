@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import abel_window
 import cv2, numpy
 import pyscreenshot as ImageGrab
 
