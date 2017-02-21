@@ -13,9 +13,8 @@ if __name__ == '__main__':
     freeze_support()
     w = abel_window.WindowMgr()
     w.find_window_wildcard(".*Revision.*ID.*")
-    if w._find == False:
-        return
-    w.set_foreground()
+    if w._find == True:
+        w.set_foreground()
     x,y = w.offset()
     if sys.argv[1] == '-pos':
         cursor = win32gui.GetCursorPos()
@@ -31,19 +30,26 @@ if __name__ == '__main__':
         )
         im_head.save(sys.argv[1]+'.png')
     elif sys.argv[1] == '-cord':
-        pyautogui.keyDown('alt')
-        pyautogui.press('1')
-        pyautogui.keyUp('alt')
-        time.sleep(0.5)
-        pyautogui.click(x+275, y+300)
-        pyautogui.keyDown('alt')
-        pyautogui.press('1')
-        pyautogui.keyUp('alt')
-        time.sleep(10)
-        pyautogui.click(x+487, y+89)
-        time.sleep(0.5)
-        pyautogui.click(x+233, y+377)
-        print abel_words.get_bxxm_task_description(x, y, abel_window.coordinate_pos)
+        zero = [158, 506]
+        dst = [180,140]
+        cord = [158+180*1.513, 506-140*1.51]
+        # pyautogui.keyDown('alt')
+        # pyautogui.press('1')
+        # pyautogui.keyUp('alt')
+        # time.sleep(0.5)
+        # pyautogui.click(x+cord[0], y+cord[1])
+        # pyautogui.keyDown('alt')
+        # pyautogui.press('1')
+        # pyautogui.keyUp('alt')
+        cursor = win32gui.GetCursorPos()
+        pyautogui.click(cursor[0]+100, cursor[1])
+        time.sleep(20)
+        pyautogui.click(cursor[0]+200, cursor[1])
+        # pyautogui.click(x+487, y+89)
+        # time.sleep(0.5)
+        # pyautogui.click(x+233, y+377)
+        # print abel_words.get_bxxm_task_description(x, y, abel_window.coordinate_pos)
     elif sys.argv[1] == '-blue':
-        return w.checkBlueEnough()
+        print w.checkBlueEnough()
+        w.clickDrug()
 

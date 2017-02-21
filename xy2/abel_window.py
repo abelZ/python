@@ -5,6 +5,7 @@ import win32gui, re
 import time, random
 import pyautogui
 import cv2, numpy
+import pyscreenshot as ImageGrab
 
 s_not_moved      = 'not moved'
 s_not_in_team    = 'not in team'
