@@ -38,6 +38,7 @@ class WindowMgr:
         self._find = False
         self.x = 0
         self.y = 0
+        self.template_cache = False
         self.team_template = None
         self.anim_template = None
 
@@ -79,7 +80,7 @@ class WindowMgr:
         pyautogui.keyDown('alt')
         pyautogui.press('e')
         pyautogui.keyUp('alt')
-        time.sleep(0.5)
+        time.sleep(0.2)
         pyautogui.rightClick(
             random.randint(
                 self.x+drug_pos[0],
@@ -90,7 +91,7 @@ class WindowMgr:
                 self.y+drug_pos[3]
             )
         )
-        time.sleep(0.5)
+        time.sleep(0.2)
         pyautogui.keyDown('alt')
         pyautogui.press('e')
         pyautogui.keyUp('alt')
@@ -105,15 +106,11 @@ class WindowMgr:
         for i in range(h):
             np_array.append(tmp[index:index+w])
             index += w
-            srcRGB = numpy.array(np_array, dtype=numpy.uint8)
-            return cv2.cvtColor(srcRGB, cv2.COLOR_RGB2BGR),w,h
+        srcRGB = numpy.array(np_array, dtype=numpy.uint8)
+        return cv2.cvtColor(srcRGB, cv2.COLOR_RGB2BGR),w,h
 
     def checkBlueEnough(self):
-        absBox = [self.x+blue_enough_pos[0],
-                  self.y+blue_enough_pos[1],
-                  self.x+blue_enough_pos[2],
-                  self.y+blue_enough_pos[3]]
-        im,w,h = self.grabImage(absBox)
+        im,w,h = self.grabImage(blue_enough_pos)
         b,g,r = cv2.split(im)
         mask = cv2.inRange(r,
                            numpy.array([blue_range[0]], dtype='uint8'),
@@ -121,43 +118,18 @@ class WindowMgr:
         return cv2.countNonZero(mask) == w*h
 
     def check_out_fight_in_team(self):
-        if self.team_template == None:
-            absBox = [
-                self.x + head_pos[0],
-                self.y + head_pos[1],
-                self.x + head_pos[2],
-                self.y + head_pos[3]
-            ]
-            self.team_template,w,h = self.grabImage(absBox)
+        if self.template_cache == False:
+            self.template_cache = True
+            self.team_template,w,h = self.grabImage(head_pos)
+            self.anim_template,w,h = self.grabImage(animal_pos)
 
-        absBox = [
-            self.x + team_pos[0],
-            self.y + team_pos[1],
-            self.x + team_pos[2],
-            self.y + team_pos[3]
-        ]
-        cv_team,w,h = self.grabImage(absBox)
+        cv_team,w,h = self.grabImage(team_pos)
         res = cv2.matchTemplate(cv_team, self.team_template, eval('cv2.TM_CCOEFF'))
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
         return max_val >= 4500000.0
 
     def check_if_in_fight(self):
-        if self.anim_template == None:
-            absBox = [
-                self.x + animal_pos[0],
-                self.y + animal_pos[1],
-                self.x + animal_pos[2],
-                self.y + animal_pos[3]
-            ]
-            self.anim_template,w,h = self.grabImage(absBox)
-
-        absBox = [
-            self.x + animal_fight_pos[0],
-            self.y + animal_fight_pos[1],
-            self.x + animal_fight_pos[2],
-            self.y + animal_fight_pos[3]
-        ]
-        cv_fight,w,h = self.grabImage(absBox)
+        cv_fight,w,h = self.grabImage(animal_fight_pos)
         res = cv2.matchTemplate(cv_fight, self.anim_template, eval('cv2.TM_CCOEFF'))
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
         return max_val >= 4500000.0
