@@ -106,6 +106,7 @@ class WindowMgr:
         for i in range(h):
             np_array.append(tmp[index:index+w])
             index += w
+
         srcRGB = numpy.array(np_array, dtype=numpy.uint8)
         return cv2.cvtColor(srcRGB, cv2.COLOR_RGB2BGR),w,h
 
