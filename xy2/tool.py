@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import abel_window, abel_words
+import abel_window, abel_words, abel_map, abel_log
 import pyscreenshot as ImageGrab
 import win32gui
 import pyautogui
@@ -30,9 +30,17 @@ if __name__ == '__main__':
         )
         im_head.save(sys.argv[1]+'.png')
     elif sys.argv[1] == '-cord':
-        zero = [158, 506]
-        dst = [180,140]
-        cord = [158+180*1.513, 506-140*1.51]
+        t = abel_words.get_coordinate_text()
+        abel_log.printGbk(''.join(t))
+        # m = abel_map.src_bx_map.get(abel_map.py.to('火云戈壁'))
+        # m.addDst([100,119])
+        # m.route()
+
+        # abel_window.xy2_win.click([493,474])
+        # abel_window.xy2_win.click([275,300])
+        # zero = [158, 506]
+        # dst = [180,140]
+        # cord = [158+180*1.513, 506-140*1.51]
         # pyautogui.keyDown('alt')
         # pyautogui.press('1')
         # pyautogui.keyUp('alt')
@@ -41,10 +49,10 @@ if __name__ == '__main__':
         # pyautogui.keyDown('alt')
         # pyautogui.press('1')
         # pyautogui.keyUp('alt')
-        cursor = win32gui.GetCursorPos()
-        pyautogui.click(cursor[0]+100, cursor[1])
-        time.sleep(20)
-        pyautogui.click(cursor[0]+200, cursor[1])
+        # cursor = win32gui.GetCursorPos()
+        # pyautogui.click(cursor[0]+100, cursor[1])
+        # time.sleep(20)
+        # pyautogui.click(cursor[0]+200, cursor[1])
         # pyautogui.click(x+487, y+89)
         # time.sleep(0.5)
         # pyautogui.click(x+233, y+377)

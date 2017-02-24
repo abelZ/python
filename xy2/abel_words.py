@@ -3,42 +3,64 @@
 
 import abel_window, abel_log
 import cv2
-import pytesseract
-import pyscreenshot as ImageGrab
-from PIL import Image
-import time, random
+import os, time, random, subprocess
 import pyautogui
 
-def get_bxxm_task_description(x_offset, y_offset, pos):
+def run_tesseract(input_filename, output_filename_base, lang=None, boxes=False, config=None):
+    cmd = 'tesseract-ocr\\tesseract'
+    command = [cmd, input_filename, output_filename_base]
+
+    if lang is not None:
+        command += ['-l', lang]
+
+    if boxes:
+        command += ['batch.nochop', 'makebox']
+
+    if config:
+        command += shlex.split(config)
+
+    proc = subprocess.Popen(command,
+            stderr=subprocess.PIPE)
+    return (proc.wait(), proc.stderr.read())
+
+def image_to_string(input_file_name, lang=None, boxes=False, config=None):
+    output_file_name_base = input_file_name
+    if not boxes:
+        output_file_name = '%s.txt' % output_file_name_base
+    else:
+        output_file_name = '%s.box' % output_file_name_base
+    try:
+        status, error_string = run_tesseract(
+            input_file_name,
+            output_file_name_base,
+            lang=lang,
+            boxes=boxes,
+            config=config,
+        )
+        if status:
+            return ''
+        f = open(output_file_name)
+        try:
+            return f.read().rstrip()
+        finally:
+            f.close()
+    finally:
+        os.remove(output_file_name)
+
+def get_bxxm_task_description():
+    tmp_tif = '.\\auto\\bxxm_tmp.bmp'
     pyautogui.keyDown('alt')
     pyautogui.press('q')
     pyautogui.keyUp('alt')
     time.sleep(0.5)
-    im_head = ImageGrab.grab(
-        bbox=(
-            x_offset + pos[0],
-            y_offset + pos[1],
-            x_offset + pos[2],
-            y_offset + pos[3]
-        )
-    )
+    im,w,h = abel_window.xy2_win.grabImage(abel_window.bxxm_task_pos)
     pyautogui.keyDown('alt')
     pyautogui.press('q')
     pyautogui.keyUp('alt')
-    tmp = '.\\auto\\bxxm_tmp.png'
-    tmp_tif = tmp + '.tif'
-    im_head.save(tmp)
-    im = cv2.imread(tmp, 0)
     im2 = cv2.resize(im, (0,0), fx=3.0, fy=3.0)
     cv2.imwrite(tmp_tif, im2)
-
-    tesseract_cmd = 'tesseract-ocr\\tesseract'
-    original = pytesseract.image_to_string(
-        Image.open(tmp_tif),
-        lang='chi_sim',
-        boxes=True,
-        cmd=tesseract_cmd
-    ).replace('\xe3\x80\x94', '(').\
+    original = image_to_string(tmp_tif, lang='chi_sim', boxes=True).\
+            replace('\xe3\x80\x94', '(').\
             replace('\xe3\x80\x95', ')').\
             replace('\xef\xbc\x8c', ',').\
             replace('\xe2\x80\xb2', ',').\
@@ -100,4 +122,50 @@ def get_bxxm_task_description(x_offset, y_offset, pos):
         log_code += word
         vec_text.append(word)
     abel_log.write_to_log(log_code)
+    cleanup(tmp_tif)
     return vec_text
+
+def get_coordinate_text():
+    tmp_tif = '.\\auto\\cord_tmp.bmp'
+    im,w,h = abel_window.xy2_win.grabImage(abel_window.coordinate_pos)
+    im2 = cv2.resize(im, (0,0), fx=3.0, fy=3.0)
+    cv2.imwrite(tmp_tif, im2)
+    original = image_to_string(tmp_tif,lang='chi_sim',boxes=True).\
+            replace('\xe3\x80\x94', '(').\
+            replace('\xe3\x80\x95', ')').\
+            replace('\xef\xbc\x8c', ',').\
+            replace('\xe2\x80\xb2', ',').\
+            replace('\xe3\x80\x8d', ',').\
+            replace('[', '(').\
+            replace(']', ')').\
+            replace('茎同', '洞').\
+            replace('\xe8\x96\xb9同', '洞').\
+            replace('哇', '4').\
+            replace('喹', '4').\
+            replace('碟', '4').\
+            replace('?', '7').\
+            replace('T', '7').\
+            replace('了', '7').\
+            replace('g', '9').\
+            replace('D', '0').\
+            replace('B', '6').\
+            replace('S', '5').\
+            replace('s', '5').\
+            replace('言庾', '波').\
+            replace('春皮', '波').\
+            replace('曰', '白').\
+            replace('臼', '白').\
+            replace('胃', '骨').\
+            replace('音', '骨').\
+            replace('炊二', '火')
+    log_code = ''
+    vec_text = []
+    for line in original.split('\n'):
+        word = line.split()[0]
+        log_code += repr(word)
+        log_code += word
+        vec_text.append(word)
+    abel_log.write_to_log(log_code)
+    os.remove(tmp_tif)
+    return vec_text
+
