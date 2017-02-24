@@ -18,7 +18,7 @@ class xy2_xiu:
         self.bquit = True
 
     def run_task(self):
-        drink_drug          = False
+        drink_drug          = True
         in_out_fight_count  = 0
         out_fight_count     = 0
         check_in_team_count = 0
@@ -63,6 +63,9 @@ class xy2_xiu:
                         if w.checkBlueEnough() == False:
                             print "drink drug"
                             w.clickDrug()
+                        if w.checkRedEnough() == False:
+                            print 'drink red'
+                            w.drinkRed()
             except:
                 pass
 
