@@ -24,15 +24,14 @@ box_pos          = [343, 367, 354, 390]
 bidou_pos        = [507, 408, 593, 423]
 bxxm_task_pos    = [376, 232, 636, 286] #bxxm
 coordinate_pos   = [20,63,143,84]
-blue_enough_pos  = [750, 89, 752, 90]#[730,89,800,90]
+blue_enough_pos  = [755, 89, 757, 90]#[730,89,800,90]
 red_enough_pos   = [770, 74, 772, 75]#[730,74,800,75]
 
 wild_pos         = [[283,231], [468,283], [378,451], [270,388], [530,367]]
 nao_pos          = [[216,274], [236,210], [230,163]]#hua 282,42
 
-center_pos       = []
+center_pos       = [392, 331]
 blue_range       = [0, 100]
-bxxm_start_pos   = []
 
 class WindowMgr:
     """Encapsulates some calls to the winapi for window management"""
@@ -84,6 +83,8 @@ class WindowMgr:
         pyautogui.keyDown('alt')
         pyautogui.press('e')
         pyautogui.keyUp('alt')
+        time.sleep(0.2)
+        pyautogui.click(self.x+348,self.y+385)
         time.sleep(0.2)
         pyautogui.rightClick(
             random.randint(
@@ -189,8 +190,8 @@ class WindowMgr:
             pyautogui.click(self.x+pos[0], self.y+pos[1])
         except:
             pass
-        pyautogui.keyUp('a')
-        pyautogui.keyUp('alt')
+        # pyautogui.keyUp('a')
+        # pyautogui.keyUp('alt')
 
     def click(self, pos):
         try:
@@ -217,12 +218,10 @@ class WindowMgr:
             pyautogui.click(self.x+relative_pos[0], self.y+relative_pos[1])
         except:
             pass
-        time.sleep(0.3)
+        time.sleep(0.1)
         pyautogui.keyDown('alt')
         pyautogui.press('1')
         pyautogui.keyUp('alt')
 
 xy2_win = WindowMgr()
 xy2_win.find_window_wildcard(".*Revision.*ID.*")
-if xy2_win._find:
-    xy2_win.set_foreground()

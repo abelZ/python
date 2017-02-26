@@ -14,21 +14,31 @@ class xy2_baoxiang:
         self.count = number
         self.win = abel_window.xy2_win
         self.role_status = abel_window.s_in_team
+        self.auto = False
 
     def quit(self):
         self.quit = True
 
+    def clickAuto(self):
+        self.auto = True
+
+    def go_to_begin(self):
+        c = abel_map.city_map['bao xiang guo']
+        p1 = abel_map.point([90, 85], abel_map.py.to('宝象国'), 'click_map', d=[89, 85])
+        p1.click()
+
     def accept_task(self):
+        print 'accept task'
         #get the task
-        p2 = abel_map.point(x, y, abel_map.py.to('宝象国'), 'click')
-        p3 = abel_map.point(x, y, abel_map.py.to('宝象国'), 'click')
+        p2 = abel_map.point([[345,255],[258,358]], abel_map.py.to('宝象国'), 'click_double', fly = True)
+        p2.click()
         #close the task window
-        self.w.click(x, y)
+        self.removeTip()
         #recognize the task by tesseract
         self.task = abel_words.get_bxxm_task_description()
 
     def analize_normal_task(self):
-        tmp = ''.join(self.task).split('(')
+        tmp = self.task.split('(')
         if len(tmp) < 2:
             message = 'ERROR: ' + self.task
             abel_log.write_to_log(message)
@@ -45,11 +55,11 @@ class xy2_baoxiang:
 
     def analize_longma_task(self):
         c = ''
-        if self.task[2] == '火':
-            c = ''.join(self.task[2:6])
+        if self.task[6:9] == '火':
+            c = self.task[6:18]
         else:
-            c = ''.join(self.task[2:5])
-        tmp = ''.join(self.task).split('(')
+            c = self.task[6:15]
+        tmp = self.task.split('(')
         if len(tmp) < 3:
             message = 'ERROR: ' + self.task
             abel_log.write_to_log(message)
@@ -66,80 +76,151 @@ class xy2_baoxiang:
         abel_log.write_to_log(message)
         return abel_map.py.to(c), [int(tmp11[0]), int(tmp11[1])], [int(tmp21[0]), int(tmp21[1])]
 
-    def do_naomrl_task(self, city, pos):
-        if city == '':
-            self.cancel_task()
-            return True
-        router = abel_map.src_bx_map.get(city)
-        if router is None:
-            self.cancel_task()
-            return True
+    def do_naomrl_task(self, router, pos, city):
         router.addDst(pos)
         if router.go() == False:
             return False
         return self.attack(city, pos)
 
-    def do_longma_task(self, city, pos1, pos2):
-        if city == '':
-            self.cancel_task()
-            return True
-        router = abel_map.src_bx_map.get(city)
-        if router is None:
-            self.cancel_task()
-            return True
+    def do_longma_task(self, router, pos1, pos2, city):
         router.addDst(pos1)
         if router.go() == False:
             return False
+        self.back_to_start()
+        time.sleep(0.5)
         refresh_task = abel_words.get_bxxm_task_description()
-        if refresh_task[0] == '白':
+        if refresh_task[0:3] == '白':
+            self.win.click([406,329])
+            time.sleep(0.5)
             return self.attack(city, pos1)
         else:
-            p2 = abel_map.point(pos2, city, 'click_map', d=pos2)
+            time.sleep(0.5)
+            self.win.click([406,329])
+            p2 = abel_map.point(pos2, city, 'click_map', d=pos2, fly=True)
             p2.click()
+            self.back_to_start()
+            time.sleep(0.5)
+            self.win.click([406,329])
+            time.sleep(0.5)
             return self.attack(city, pos2)
 
     def cancel_task(self):
-        #cancel the task
-        p2 = abel_map.point(x, y, abel_map.py.to('宝象国'), 'click')
-        p3 = abel_map.point(x, y, abel_map.py.to('宝象国'), 'click')
-        p3 = abel_map.point(x, y, abel_map.py.to('宝象国'), 'click')
-        #close the task window
-        self.win.click(x, y)
+        print 'cancel_task'
+        # self.go_to_begin()
+        pos = [[345,255],[249,375],[164,344]]
+        for i in range(len(pos)):
+            time.sleep(1)
+            self.win.click(pos[i])
+        time.sleep(1)
+
+    def cancel_task2(self):
+        print 'cancel_task2'
+        # self.go_to_begin()
+        pos = [[345,255],[222,395],[170,343]]
+        for i in range(len(pos)):
+            time.sleep(1)
+            self.win.click(pos[i])
+        time.sleep(1)
 
     def attack(self, c, pos):
+        self.refresh()
         attack_points = abel_map.get_nine_attack(c, pos)
         find_attack = False
         for p in attack_points:
             self.win.attack(p)
-            time.sleep(0.5)
+            time.sleep(1)
             if self.win.check_out_fight_in_team() == False:
                 find_attack = True
+                if self.auto:
+                    self.auto = False
+                    self.win.clickAuto(self.count)
                 break
         while find_attack:
             if self.win.check_out_fight_in_team() == True:
+                # for index in range(4):
+                    # if self.win.checkBlueEnough() == False:
+                        # self.win.drinkBlue()
+                    # if self.win.checkRedEnough() == False:
+                            # self.win.drinkRed()
+                    # pyautogui.keyDown('ctrl')
+                    # pyautogui.press('tab')
+                    # pyautogui.keyUp('ctrl')
+                time.sleep(1)
                 self.back_to_start()
                 break
             time.sleep(0.1)
         return find_attack
 
     def back_to_start(self):
-        pass
+        pyautogui.keyDown('alt')
+        pyautogui.press('e')
+        pyautogui.keyUp('alt')
+        time.sleep(0.5)
+        self.win.click([348,557])
+        time.sleep(0.5)
+        self.win.rightClick([310,442])
+        pyautogui.keyDown('alt')
+        pyautogui.press('e')
+        pyautogui.keyUp('alt')
+
+    def refresh(self):
+        pyautogui.keyDown('alt')
+        pyautogui.press('e')
+        pyautogui.keyUp('alt')
+        time.sleep(0.5)
+        self.win.click([348,385])
+        time.sleep(0.5)
+        self.win.rightClick([203,543])
+        time.sleep(0.5)
+        self.win.click([187,480])
+        pyautogui.keyDown('alt')
+        pyautogui.press('e')
+        pyautogui.keyUp('alt')
+
+    def removeTip(self):
+        pyautogui.keyDown('alt')
+        pyautogui.press('e')
+        pyautogui.keyUp('alt')
+        time.sleep(0.5)
+        self.win.click([348,385])
+        time.sleep(0.5)
+        pyautogui.keyDown('alt')
+        pyautogui.press('e')
+        pyautogui.keyUp('alt')
 
     def excute_one_task(self):
-        #move to a fixed position
-        p1 = abel_map.point(abel_window.bxxm_start_pos,
-                            abel_map.py.to('宝象国'),
-                            'click_map',
-                            d=abel_window.bxxm_start_pos)
-        p1.click()
-        self.accept_task()
         result = False
-        if p1.task[0] == '前' and p1.[1] == '往':
-            c,pos1,pos2 = self.analize_longma_task()
-            result = self.do_longma_task(c, pos1, pos2)
-        else:
-            c,pos = self.analize_normal_task()
-            result = self.do_naomrl_task(c, pos)
+        self.go_to_begin()
+        try_count = 0
+        while try_count < 10:
+            try_count += 1
+            self.accept_task()
+            if self.task[0:3] == '前' and self.task[3:6] == '往':
+                c,pos1,pos2 = self.analize_longma_task()
+                router = abel_map.src_bx_map.get(c)
+                if router is None:
+                    self.cancel_task()
+                    continue
+                message = 'task: ' + c + '(%d,%d) (%d,%d)' % (pos1[0],pos1[1],pos2[0],pos2[1])
+                abel_log.write_to_log(message, to_screen = True)
+                result = self.do_longma_task(router, pos1, pos2, c)
+            elif self.task[0:3] == '三':
+                c,pos = self.analize_normal_task()
+                router = abel_map.src_bx_map.get(c)
+                if router is None:
+                    self.cancel_task()
+                    continue
+                message = 'task: ' + c + '(%d,%d)' % (pos[0],pos[1])
+                abel_log.write_to_log(message, to_screen = True)
+                result = self.do_naomrl_task(router, pos, c)
+            elif self.task[0:3] == '义':
+                self.cancel_task2()
+                continue
+            else:
+                self.refresh()
+                self.go_to_begin()
+                continue
+            break
         return result
 
     def run_task(self):

@@ -62,7 +62,7 @@ class xy2_xiu:
                         drink_drug = False
                         if w.checkBlueEnough() == False:
                             print "drink drug"
-                            w.clickDrug()
+                            w.drinkBlue()
                         if w.checkRedEnough() == False:
                             print 'drink red'
                             w.drinkRed()

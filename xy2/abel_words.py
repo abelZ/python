@@ -59,12 +59,23 @@ def get_bxxm_task_description():
     pyautogui.keyUp('alt')
     im2 = cv2.resize(im, (0,0), fx=3.0, fy=3.0)
     cv2.imwrite(tmp_tif, im2)
-    original = image_to_string(tmp_tif, lang='chi_sim', boxes=True).\
+    original = image_to_string(tmp_tif, lang='chi_sim', boxes=True)
+    log_code = ''
+    mid_text = ''
+    for line in original.split('\n'):
+        word = line.split()[0]
+        log_code += repr(word)
+        log_code += word
+        mid_text += word
+    # abel_log.write_to_log(log_code)
+    os.remove(tmp_tif)
+    return mid_text.\
             replace('\xe3\x80\x94', '(').\
             replace('\xe3\x80\x95', ')').\
             replace('\xef\xbc\x8c', ',').\
             replace('\xe2\x80\xb2', ',').\
             replace('誓主', '往').\
+            replace('千主', '往').\
             replace('窄查', '松').\
             replace('木木', '林').\
             replace('i昊', '误').\
@@ -114,32 +125,34 @@ def get_bxxm_task_description():
             replace('妊', '妖').\
             replace('炊二', '火').\
             replace('f壬', '任')
+
+def get_coordinate_text(f=None):
+    tmp_tif = f
+    if f is None:
+        tmp_tif = '.\\auto\\cord_tmp.bmp'
+    im,w,h = abel_window.xy2_win.grabImage(abel_window.coordinate_pos)
+    im2 = cv2.resize(im, (0,0), fx=3.0, fy=3.0)
+    cv2.imwrite(tmp_tif, im2)
+    original = image_to_string(tmp_tif, lang='chi_sim', boxes=True)
     log_code = ''
-    vec_text = []
+    mid_text = ''
     for line in original.split('\n'):
         word = line.split()[0]
         log_code += repr(word)
         log_code += word
-        vec_text.append(word)
-    abel_log.write_to_log(log_code)
-    cleanup(tmp_tif)
-    return vec_text
-
-def get_coordinate_text():
-    tmp_tif = '.\\auto\\cord_tmp.bmp'
-    im,w,h = abel_window.xy2_win.grabImage(abel_window.coordinate_pos)
-    im2 = cv2.resize(im, (0,0), fx=3.0, fy=3.0)
-    cv2.imwrite(tmp_tif, im2)
-    original = image_to_string(tmp_tif,lang='chi_sim',boxes=True).\
+        mid_text += word
+    if f is None:
+        os.remove(tmp_tif)
+    return mid_text.\
             replace('\xe3\x80\x94', '(').\
             replace('\xe3\x80\x95', ')').\
             replace('\xef\xbc\x8c', ',').\
             replace('\xe2\x80\xb2', ',').\
             replace('\xe3\x80\x8d', ',').\
+            replace('【', '(').\
+            replace('】', ')').\
             replace('[', '(').\
             replace(']', ')').\
-            replace('茎同', '洞').\
-            replace('\xe8\x96\xb9同', '洞').\
             replace('哇', '4').\
             replace('喹', '4').\
             replace('碟', '4').\
@@ -151,21 +164,18 @@ def get_coordinate_text():
             replace('B', '6').\
             replace('S', '5').\
             replace('s', '5').\
-            replace('言庾', '波').\
-            replace('春皮', '波').\
+            replace('!', '7').\
+            replace('U', '0').\
+            replace('O', '0').\
+            replace('I', '1').\
+            replace('l', '1').\
+            replace('\xe5\x99\xbb', '4').\
+            replace('\xe9\xad\x8f', '4').\
+            replace('\xe8\x9d\xb6', '4').\
+            replace('\xe3\x80\x91', '1').\
             replace('曰', '白').\
             replace('臼', '白').\
             replace('胃', '骨').\
             replace('音', '骨').\
-            replace('炊二', '火')
-    log_code = ''
-    vec_text = []
-    for line in original.split('\n'):
-        word = line.split()[0]
-        log_code += repr(word)
-        log_code += word
-        vec_text.append(word)
-    abel_log.write_to_log(log_code)
-    os.remove(tmp_tif)
-    return vec_text
+            replace('晋', '骨')
 

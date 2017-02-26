@@ -1,17 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import abel_window, abel_words, abel_map, abel_log
+import abel_window, abel_words, abel_map, abel_log, abel_baoxiang
 import pyscreenshot as ImageGrab
 import win32gui
 import pyautogui
 import sys, time
 from multiprocessing import freeze_support
 import cv2
+import winsound, ctypes
 
 if __name__ == '__main__':
     freeze_support()
-    w = abel_window.WindowMgr()
+    w = abel_window.xy2_win
     w.find_window_wildcard(".*Revision.*ID.*")
     if w._find == True:
         w.set_foreground()
@@ -30,11 +31,41 @@ if __name__ == '__main__':
         )
         im_head.save(sys.argv[1]+'.png')
     elif sys.argv[1] == '-cord':
-        t = abel_words.get_coordinate_text()
-        abel_log.printGbk(''.join(t))
-        # m = abel_map.src_bx_map.get(abel_map.py.to('火云戈壁'))
-        # m.addDst([100,119])
-        # m.route()
+        # attack_points = abel_map.get_nine_attack(abel_map.py.to('平顶山'), [132,10])
+        # for p in attack_points:
+            # w.attack(p)
+            # print p
+            # time.sleep(0.5)
+            # if w.check_out_fight_in_team() == False:
+                # find_attack = True
+                # break
+        t = abel_baoxiang.xy2_baoxiang(4)
+        i = 0
+        while True:
+            i += 1
+            if i == 5:
+                i = 0
+                t.clickAuto()
+            for index in range(4):
+                if w.checkBlueEnough() == False:
+                    w.drinkBlue()
+                if w.checkRedEnough() == False:
+                    w.drinkRed()
+                pyautogui.keyDown('ctrl')
+                pyautogui.press('tab')
+                pyautogui.keyUp('ctrl')
+            if t.excute_one_task() == False:
+                winsound.PlaySound('.\\resource\\not_moved.wav', winsound.SND_FILENAME)
+                break
+            time.sleep(1)
+        # t.back_to_start()
+        # time.sleep(2)
+        # t.excute_one_task()
+        # t = abel_words.get_coordinate_text()
+        # abel_log.printGbk(''.join(t))
+        # m = abel_map.src_bx_map.get(abel_map.py.to('白骨山'))
+        # m.addDst([152, 91])
+        # m.go()
 
         # abel_window.xy2_win.click([493,474])
         # abel_window.xy2_win.click([275,300])
@@ -58,6 +89,11 @@ if __name__ == '__main__':
         # pyautogui.click(x+233, y+377)
         # print abel_words.get_bxxm_task_description(x, y, abel_window.coordinate_pos)
     elif sys.argv[1] == '-blue':
-        print w.checkBlueEnough()
-        w.clickDrug()
+        for i in range(50):
+            print i
+            pyautogui.moveTo(x+392, y+250)
+            time.sleep(2)
+        # print w.checkBlueEnough()
+        # w.drinkBlue()
+        # w.drinkRed()
 
