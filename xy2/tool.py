@@ -89,10 +89,15 @@ if __name__ == '__main__':
         # pyautogui.click(x+233, y+377)
         # print abel_words.get_bxxm_task_description(x, y, abel_window.coordinate_pos)
     elif sys.argv[1] == '-blue':
-        for i in range(50):
-            print i
-            pyautogui.moveTo(x+392, y+250)
-            time.sleep(2)
+        t0 = time.clock()
+        router = abel_map.src_bx_map.get('bai gu shan')
+        router.addDst([100, 110])
+        print router.go()
+        print 'cost %.2f' % (time.clock() - t0)
+        # for i in range(50):
+            # print i
+            # pyautogui.moveTo(x+392, y+250)
+            # time.sleep(2)
         # print w.checkBlueEnough()
         # w.drinkBlue()
         # w.drinkRed()

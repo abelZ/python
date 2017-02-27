@@ -30,7 +30,6 @@ red_enough_pos   = [770, 74, 772, 75]#[730,74,800,75]
 wild_pos         = [[283,231], [468,283], [378,451], [270,388], [530,367]]
 nao_pos          = [[216,274], [236,210], [230,163]]#hua 282,42
 
-center_pos       = [392, 331]
 blue_range       = [0, 100]
 
 class WindowMgr:
@@ -213,7 +212,7 @@ class WindowMgr:
         pyautogui.keyDown('alt')
         pyautogui.press('1')
         pyautogui.keyUp('alt')
-        time.sleep(0.5)
+        time.sleep(0.25)
         try:
             pyautogui.click(self.x+relative_pos[0], self.y+relative_pos[1])
         except:
@@ -224,4 +223,3 @@ class WindowMgr:
         pyautogui.keyUp('alt')
 
 xy2_win = WindowMgr()
-xy2_win.find_window_wildcard(".*Revision.*ID.*")

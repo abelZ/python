@@ -13,6 +13,8 @@ class xy2_baoxiang:
         self.quit = False
         self.count = number
         self.win = abel_window.xy2_win
+        if self.win._find == False:
+            self.win.find_window_wildcard(".*Revision.*ID.*")
         self.role_status = abel_window.s_in_team
         self.auto = False
 
@@ -24,8 +26,9 @@ class xy2_baoxiang:
 
     def go_to_begin(self):
         c = abel_map.city_map['bao xiang guo']
-        p1 = abel_map.point([90, 85], abel_map.py.to('宝象国'), 'click_map', d=[89, 85])
-        p1.click()
+        p = abel_map.point([90, 85], abel_map.py.to('宝象国'), 'click_map', d=[89, 85])
+        p.click()
+        time.sleep(0.5)
 
     def accept_task(self):
         print 'accept task'
@@ -87,21 +90,15 @@ class xy2_baoxiang:
         if router.go() == False:
             return False
         self.back_to_start()
-        time.sleep(0.5)
+        self.removeTip()
         refresh_task = abel_words.get_bxxm_task_description()
         if refresh_task[0:3] == '白':
-            self.win.click([406,329])
-            time.sleep(0.5)
             return self.attack(city, pos1)
         else:
-            time.sleep(0.5)
-            self.win.click([406,329])
-            p2 = abel_map.point(pos2, city, 'click_map', d=pos2, fly=True)
-            p2.click()
+            p = abel_map.point(pos2, city, 'click_map', d=pos2, fly=True)
+            p.click()
             self.back_to_start()
-            time.sleep(0.5)
-            self.win.click([406,329])
-            time.sleep(0.5)
+            self.removeTip()
             return self.attack(city, pos2)
 
     def cancel_task(self):
@@ -109,26 +106,24 @@ class xy2_baoxiang:
         # self.go_to_begin()
         pos = [[345,255],[249,375],[164,344]]
         for i in range(len(pos)):
-            time.sleep(1)
             self.win.click(pos[i])
-        time.sleep(1)
+            time.sleep(0.25)
 
     def cancel_task2(self):
         print 'cancel_task2'
         # self.go_to_begin()
         pos = [[345,255],[222,395],[170,343]]
         for i in range(len(pos)):
-            time.sleep(1)
             self.win.click(pos[i])
-        time.sleep(1)
+            time.sleep(0.25)
 
     def attack(self, c, pos):
-        self.refresh()
-        attack_points = abel_map.get_nine_attack(c, pos)
+        # self.refresh()
+        attack_points = abel_map.get_attack_points(c, pos)
         find_attack = False
         for p in attack_points:
             self.win.attack(p)
-            time.sleep(1)
+            time.sleep(0.5)
             if self.win.check_out_fight_in_team() == False:
                 find_attack = True
                 if self.auto:
@@ -145,7 +140,7 @@ class xy2_baoxiang:
                     # pyautogui.keyDown('ctrl')
                     # pyautogui.press('tab')
                     # pyautogui.keyUp('ctrl')
-                time.sleep(1)
+                time.sleep(0.5)
                 self.back_to_start()
                 break
             time.sleep(0.1)
@@ -155,9 +150,9 @@ class xy2_baoxiang:
         pyautogui.keyDown('alt')
         pyautogui.press('e')
         pyautogui.keyUp('alt')
-        time.sleep(0.5)
+        time.sleep(0.25)
         self.win.click([348,557])
-        time.sleep(0.5)
+        time.sleep(0.25)
         self.win.rightClick([310,442])
         pyautogui.keyDown('alt')
         pyautogui.press('e')
@@ -167,11 +162,11 @@ class xy2_baoxiang:
         pyautogui.keyDown('alt')
         pyautogui.press('e')
         pyautogui.keyUp('alt')
-        time.sleep(0.5)
+        time.sleep(0.25)
         self.win.click([348,385])
-        time.sleep(0.5)
+        time.sleep(0.25)
         self.win.rightClick([203,543])
-        time.sleep(0.5)
+        time.sleep(0.25)
         self.win.click([187,480])
         pyautogui.keyDown('alt')
         pyautogui.press('e')
@@ -181,9 +176,9 @@ class xy2_baoxiang:
         pyautogui.keyDown('alt')
         pyautogui.press('e')
         pyautogui.keyUp('alt')
-        time.sleep(0.5)
+        time.sleep(0.25)
         self.win.click([348,385])
-        time.sleep(0.5)
+        time.sleep(0.25)
         pyautogui.keyDown('alt')
         pyautogui.press('e')
         pyautogui.keyUp('alt')
@@ -217,9 +212,9 @@ class xy2_baoxiang:
                 self.cancel_task2()
                 continue
             else:
-                self.refresh()
-                self.go_to_begin()
-                continue
+                # self.refresh()
+                # self.go_to_begin()
+                break
             break
         return result
 
