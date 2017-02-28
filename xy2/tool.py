@@ -46,14 +46,14 @@ if __name__ == '__main__':
             if i == 5:
                 i = 0
                 t.clickAuto()
-            for index in range(4):
+            for index in range(1):
                 if w.checkBlueEnough() == False:
                     w.drinkBlue()
                 if w.checkRedEnough() == False:
                     w.drinkRed()
-                pyautogui.keyDown('ctrl')
-                pyautogui.press('tab')
-                pyautogui.keyUp('ctrl')
+                # pyautogui.keyDown('ctrl')
+                # pyautogui.press('tab')
+                # pyautogui.keyUp('ctrl')
             if t.excute_one_task() == False:
                 winsound.PlaySound('.\\resource\\not_moved.wav', winsound.SND_FILENAME)
                 break

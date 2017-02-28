@@ -26,7 +26,7 @@ class xy2_baoxiang:
 
     def go_to_begin(self):
         c = abel_map.city_map['bao xiang guo']
-        p = abel_map.point([90, 85], abel_map.py.to('宝象国'), 'click_map', d=[89, 85])
+        p = abel_map.point([90, 85], abel_map.py.to('宝象国'), 'click_map', d=[89, 85], s=2.0)
         p.click()
         time.sleep(0.5)
 

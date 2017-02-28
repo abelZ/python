@@ -212,12 +212,12 @@ class WindowMgr:
         pyautogui.keyDown('alt')
         pyautogui.press('1')
         pyautogui.keyUp('alt')
-        time.sleep(0.25)
+        time.sleep(1.25)
         try:
             pyautogui.click(self.x+relative_pos[0], self.y+relative_pos[1])
         except:
             pass
-        time.sleep(0.1)
+        time.sleep(0.25)
         pyautogui.keyDown('alt')
         pyautogui.press('1')
         pyautogui.keyUp('alt')

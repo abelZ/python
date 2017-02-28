@@ -193,7 +193,7 @@ class xy2_map_bx_pds(xy2_map):
     def __init__(self):
         self.route = [
             point([222,21], py.to('宝象国'), 'click_map', d=[221,21], s=2.0),
-            point([[279,283],[259,379]], py.to('宝象国'), 'click_double', d=[20,100])
+            point([[247,161],[259,379]], py.to('宝象国'), 'click_double', d=[20,100])
         ]
 
     def addDst(self, pos):
@@ -204,10 +204,10 @@ class xy2_map_bx_ssz(xy2_map):
     def __init__(self):
         self.route = [
             point([222,21], py.to('宝象国'), 'click_map', d=[221,21], s=2.0),
-            point([[279,283],[211,396]], py.to('宝象国'), 'click_double', d=[63,209]),
-            point([[355,273],[224,353]], py.to('长安城'), 'right_click_double', d=[]),
-            point([[356,254],[240,411]], py.to('长安城'), 'right_click_double', d=[]),
-            point([[363,244],[218,363]], py.to('洛阳城'), 'right_click_double', d=[])
+            point([[247,161],[211,396]], py.to('宝象国'), 'click_double', d=[63,209]),
+            point([[362,239],[224,353]], py.to('长安城'), 'click_double', d=[]),
+            point([[356,268],[240,411]], py.to('长安城'), 'right_click_double', d=[]),
+            point([[363,247],[218,363]], py.to('洛阳城'), 'click_double', d=[])
         ]
 
     def addDst(self, pos):
@@ -218,9 +218,9 @@ class xy2_map_bx_wss(xy2_map):
     def __init__(self):
         self.route = [
             point([222,21], py.to('宝象国'), 'click_map', d=[221,21], s=2.0),
-            point([[279,283],[211,396]], py.to('宝象国'), 'click_double', d=[63,209]),
-            point([[355,273],[230,405]], py.to('长安城'), 'right_click_double', d=[]),
-            point([[356,277],[226,428]], py.to('长安城'), 'right_click_double', d=[])
+            point([[247,161],[211,396]], py.to('宝象国'), 'click_double', d=[63,209]),
+            point([[362,239],[230,405]], py.to('长安城'), 'click_double', d=[]),
+            point([[359,237],[226,428]], py.to('长安城'), 'right_click_double', d=[])
         ]
 
     def addDst(self, pos):
@@ -232,7 +232,7 @@ class xy2_map_bx_bgs(xy2_map):
         self.route = [
             point([222,21], py.to('宝象国'), 'click_map', d=[221,21], s=2.0),
             point([[247,161],[211,396]], py.to('宝象国'), 'click_double', d=[63,209]),
-            point([[362,239],[230,405]], py.to('长安城'), 'right_click_double', d=[]),
+            point([[362,239],[230,405]], py.to('长安城'), 'click_double', d=[]),
             point([[359,237],[203,446]], py.to('长安城'), 'right_click_double', d=[]),
             point([290,599], py.to('白骨洞'), 'click_right', d=[18,149])
         ]
