@@ -33,10 +33,10 @@ class xy2_baoxiang:
     def accept_task(self):
         print 'accept task'
         #get the task
-        p2 = abel_map.point([[345,255],[258,358]], abel_map.py.to('宝象国'), 'click_double', fly = True)
+        p2 = abel_map.point([[345,255],[258,358]], abel_map.py.to('宝象国'), 'click_double')
         p2.click()
         #close the task window
-        self.removeTip()
+        self.refresh()
         #recognize the task by tesseract
         self.task = abel_words.get_bxxm_task_description()
 
@@ -90,15 +90,15 @@ class xy2_baoxiang:
         if router.go() == False:
             return False
         self.back_to_start()
-        self.removeTip()
         refresh_task = abel_words.get_bxxm_task_description()
         if refresh_task[0:3] == '白':
+            self.refresh()
             return self.attack(city, pos1)
         else:
             p = abel_map.point(pos2, city, 'click_map', d=pos2, fly=True)
             p.click()
             self.back_to_start()
-            self.removeTip()
+            self.refresh()
             return self.attack(city, pos2)
 
     def cancel_task(self):
@@ -107,7 +107,7 @@ class xy2_baoxiang:
         pos = [[345,255],[249,375],[164,344]]
         for i in range(len(pos)):
             self.win.click(pos[i])
-            time.sleep(0.25)
+            time.sleep(0.5)
 
     def cancel_task2(self):
         print 'cancel_task2'
@@ -115,7 +115,7 @@ class xy2_baoxiang:
         pos = [[345,255],[222,395],[170,343]]
         for i in range(len(pos)):
             self.win.click(pos[i])
-            time.sleep(0.25)
+            time.sleep(0.5)
 
     def attack(self, c, pos):
         # self.refresh()
@@ -123,7 +123,7 @@ class xy2_baoxiang:
         find_attack = False
         for p in attack_points:
             self.win.attack(p)
-            time.sleep(0.5)
+            time.sleep(1)
             if self.win.check_out_fight_in_team() == False:
                 find_attack = True
                 if self.auto:
@@ -147,30 +147,34 @@ class xy2_baoxiang:
         return find_attack
 
     def back_to_start(self):
+        time.sleep(0.1)
         pyautogui.keyDown('alt')
         pyautogui.press('e')
         pyautogui.keyUp('alt')
-        time.sleep(0.25)
+        time.sleep(0.5)
         self.win.click([348,557])
-        time.sleep(0.25)
+        time.sleep(0.5)
         self.win.rightClick([310,442])
         pyautogui.keyDown('alt')
         pyautogui.press('e')
         pyautogui.keyUp('alt')
+        time.sleep(0.1)
 
     def refresh(self):
+        time.sleep(0.1)
         pyautogui.keyDown('alt')
         pyautogui.press('e')
         pyautogui.keyUp('alt')
-        time.sleep(0.25)
+        time.sleep(0.5)
         self.win.click([348,385])
-        time.sleep(0.25)
+        time.sleep(0.5)
         self.win.rightClick([203,543])
-        time.sleep(0.25)
+        time.sleep(0.5)
         self.win.click([187,480])
         pyautogui.keyDown('alt')
         pyautogui.press('e')
         pyautogui.keyUp('alt')
+        time.sleep(0.1)
 
     def removeTip(self):
         pyautogui.keyDown('alt')
@@ -212,9 +216,9 @@ class xy2_baoxiang:
                 self.cancel_task2()
                 continue
             else:
+                break
                 # self.refresh()
                 # self.go_to_begin()
-                break
             break
         return result
 

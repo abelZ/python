@@ -61,46 +61,53 @@ city_map = {
 }
 
 class point:
-    def __init__(self, p, c, e, d=None, fly=False):
+    def __init__(self, p, c, e, d=None, fly=False, s = 0.0):
         self.pos = p
         self.city = c
         self.event = e
         self.dst = d
         self.fly = fly
+        self.wait = s
 
     def __repr__(self):
         return self.city + ' ' + self.event + ' ' + str(self.pos)
 
     def click(self):
+        result = False
         if self.event == 'click_map':
             c = city_map[self.city]
             if self.fly:
                 abel_window.xy2_win.click([672,613])
-                time.sleep(0.5)
+                time.sleep(0.75)
                 abel_window.xy2_win.click([677,493])
                 time.sleep(0.25)
             abel_window.xy2_win.click_smap(self.pos, c.s_map_min_pos, c.s_map_scale)
             result = self.check_arrival()
             if self.fly:
                 abel_window.xy2_win.click([672,613])
-                time.sleep(0.5)
+                time.sleep(0.75)
                 abel_window.xy2_win.click([677,493])
                 time.sleep(0.25)
-            # time.sleep(3)
-            return result
         elif self.event == 'click_double':
-            time.sleep(2)
-            # abel_window.xy2_win.rightClick([407,316])
             for i in range(len(self.pos)):
                 abel_window.xy2_win.click(self.pos[i])
-                time.sleep(0.5)
-            return True
+                time.sleep(0.75)
+            result = True
+        elif self.event == 'right_click_double':
+            abel_window.xy2_win.rightClick(self.pos[0])
+            time.sleep(0.75)
+            for i in range(len(self.pos)):
+                abel_window.xy2_win.click(self.pos[i])
+                time.sleep(0.75)
+            result = True
         elif self.event == 'click_right':
-            time.sleep(0.25)
             abel_window.xy2_win.rightClick(self.pos)
-            time.sleep(2)
-            # return self.check_arrival()
-        return False
+            # time.sleep(2)
+            result = self.check_arrival()
+
+        if self.wait > 0.0:
+            time.sleep(self.wait)
+        return result
 
     def check_arrival(self):
         arrival = False
@@ -174,7 +181,7 @@ class xy2_map:
 class xy2_map_bx_hygb(xy2_map):
     def __init__(self):
         self.route = [
-            point([77, 136], py.to('宝象国'), 'click_map', d=[77, 136]),
+            point([77, 136], py.to('宝象国'), 'click_map', d=[77, 136], s=2.0),
             point([[387, 183], [233, 377]], py.to('宝象国'), 'click_double', d=[186,72])
         ]
 
@@ -185,7 +192,7 @@ class xy2_map_bx_hygb(xy2_map):
 class xy2_map_bx_pds(xy2_map):
     def __init__(self):
         self.route = [
-            point([222,21], py.to('宝象国'), 'click_map', d=[221,21]),
+            point([222,21], py.to('宝象国'), 'click_map', d=[221,21], s=2.0),
             point([[279,283],[259,379]], py.to('宝象国'), 'click_double', d=[20,100])
         ]
 
@@ -196,11 +203,11 @@ class xy2_map_bx_pds(xy2_map):
 class xy2_map_bx_ssz(xy2_map):
     def __init__(self):
         self.route = [
-            point([222,21], py.to('宝象国'), 'click_map', d=[221,21]),
+            point([222,21], py.to('宝象国'), 'click_map', d=[221,21], s=2.0),
             point([[279,283],[211,396]], py.to('宝象国'), 'click_double', d=[63,209]),
-            point([[355,273],[224,353]], py.to('长安城'), 'click_double', d=[]),
-            point([[356,254],[240,411]], py.to('长安城'), 'click_double', d=[]),
-            point([[363,244],[218,363]], py.to('洛阳城'), 'click_double', d=[])
+            point([[355,273],[224,353]], py.to('长安城'), 'right_click_double', d=[]),
+            point([[356,254],[240,411]], py.to('长安城'), 'right_click_double', d=[]),
+            point([[363,244],[218,363]], py.to('洛阳城'), 'right_click_double', d=[])
         ]
 
     def addDst(self, pos):
@@ -210,10 +217,10 @@ class xy2_map_bx_ssz(xy2_map):
 class xy2_map_bx_wss(xy2_map):
     def __init__(self):
         self.route = [
-            point([222,21], py.to('宝象国'), 'click_map', d=[221,21]),
+            point([222,21], py.to('宝象国'), 'click_map', d=[221,21], s=2.0),
             point([[279,283],[211,396]], py.to('宝象国'), 'click_double', d=[63,209]),
-            point([[355,273],[230,405]], py.to('长安城'), 'click_double', d=[]),
-            point([[356,277],[226,428]], py.to('长安城'), 'click_double', d=[])
+            point([[355,273],[230,405]], py.to('长安城'), 'right_click_double', d=[]),
+            point([[356,277],[226,428]], py.to('长安城'), 'right_click_double', d=[])
         ]
 
     def addDst(self, pos):
@@ -223,10 +230,10 @@ class xy2_map_bx_wss(xy2_map):
 class xy2_map_bx_bgs(xy2_map):
     def __init__(self):
         self.route = [
-            point([222,21], py.to('宝象国'), 'click_map', d=[221,21]),
+            point([222,21], py.to('宝象国'), 'click_map', d=[221,21], s=2.0),
             point([[247,161],[211,396]], py.to('宝象国'), 'click_double', d=[63,209]),
-            point([[362,239],[230,405]], py.to('长安城'), 'click_double', d=[]),
-            point([[359,237],[203,446]], py.to('长安城'), 'click_double', d=[]),
+            point([[362,239],[230,405]], py.to('长安城'), 'right_click_double', d=[]),
+            point([[359,237],[203,446]], py.to('长安城'), 'right_click_double', d=[]),
             point([290,599], py.to('白骨洞'), 'click_right', d=[18,149])
         ]
 
