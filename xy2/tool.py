@@ -51,9 +51,9 @@ if __name__ == '__main__':
                     w.drinkBlue()
                 if w.checkRedEnough() == False:
                     w.drinkRed()
-                # pyautogui.keyDown('ctrl')
-                # pyautogui.press('tab')
-                # pyautogui.keyUp('ctrl')
+                pyautogui.keyDown('ctrl')
+                pyautogui.press('tab')
+                pyautogui.keyUp('ctrl')
             if t.excute_one_task() == False:
                 winsound.PlaySound('.\\resource\\not_moved.wav', winsound.SND_FILENAME)
                 break
@@ -89,11 +89,18 @@ if __name__ == '__main__':
         # pyautogui.click(x+233, y+377)
         # print abel_words.get_bxxm_task_description(x, y, abel_window.coordinate_pos)
     elif sys.argv[1] == '-blue':
-        t0 = time.clock()
-        router = abel_map.src_bx_map.get('bai gu shan')
-        router.addDst([100, 110])
-        print router.go()
-        print 'cost %.2f' % (time.clock() - t0)
+        time.sleep(5)
+        # pyautogui.press('s')
+        # pyautogui.press('s')
+        # pyautogui.press('z')
+        pyautogui.typewrite('ssz ', interval=0.25)
+        # pyautogui.press('space')
+        pyautogui.press('enter')
+        # t0 = time.clock()
+        # router = abel_map.src_bx_map.get('bai gu shan')
+        # router.addDst([100, 110])
+        # print router.go()
+        # print 'cost %.2f' % (time.clock() - t0)
         # for i in range(50):
             # print i
             # pyautogui.moveTo(x+392, y+250)
@@ -101,4 +108,7 @@ if __name__ == '__main__':
         # print w.checkBlueEnough()
         # w.drinkBlue()
         # w.drinkRed()
+    elif sys.argv[1] == 'capture':
+        cv_image,w,h = w.grabImage()
+        cv2.imwrite(sys.argv[2], cv_image)
 

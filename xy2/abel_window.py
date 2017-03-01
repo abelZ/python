@@ -74,6 +74,7 @@ class WindowMgr:
             pyautogui.press('8')
             pyautogui.keyUp('alt')
             if count > 1:
+                time.sleep(0.1)
                 pyautogui.keyDown('ctrl')
                 pyautogui.press('tab')
                 pyautogui.keyUp('ctrl')
@@ -82,9 +83,9 @@ class WindowMgr:
         pyautogui.keyDown('alt')
         pyautogui.press('e')
         pyautogui.keyUp('alt')
-        time.sleep(0.2)
+        time.sleep(0.25)
         pyautogui.click(self.x+348,self.y+385)
-        time.sleep(0.2)
+        time.sleep(0.25)
         pyautogui.rightClick(
             random.randint(
                 self.x+pos[0],
@@ -95,16 +96,30 @@ class WindowMgr:
                 self.y+pos[3]
             )
         )
-        time.sleep(0.2)
+        time.sleep(0.25)
         pyautogui.keyDown('alt')
         pyautogui.press('e')
         pyautogui.keyUp('alt')
 
     def drinkBlue(self):
+        time.sleep(0.1)
         self.clickDrug(drug_blue_pos)
 
     def drinkRed(self):
+        time.sleep(0.1)
         self.clickDrug(drug_red_pos)
+
+    def drinkDrug(self, count):
+        for i in range(count):
+            if self.checkBlueEnough() == False:
+                self.drinkBlue()
+            if self.checkRedEnough() == False:
+                self.drinkRed()
+            if count > 1:
+                time.sleep(0.1)
+                pyautogui.keyDown('ctrl')
+                pyautogui.press('tab')
+                pyautogui.keyUp('ctrl')
 
     def grabImage(self, box):
         absBox = [self.x+box[0], self.y+box[1], self.x+box[2], self.y+box[3]]
@@ -212,7 +227,7 @@ class WindowMgr:
         pyautogui.keyDown('alt')
         pyautogui.press('1')
         pyautogui.keyUp('alt')
-        time.sleep(1.25)
+        time.sleep(0.75)
         try:
             pyautogui.click(self.x+relative_pos[0], self.y+relative_pos[1])
         except:
@@ -221,5 +236,11 @@ class WindowMgr:
         pyautogui.keyDown('alt')
         pyautogui.press('1')
         pyautogui.keyUp('alt')
+
+    def check_region_score(self, template, region, score):
+        cv_region,w,h = self.grabImage(region)
+        res = cv2.matchTemplate(cv_region, template, eval('cv2.TM_CCOEFF'))
+        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+        return max_val >= score
 
 xy2_win = WindowMgr()

@@ -16,7 +16,14 @@ class xy2_baoxiang:
         if self.win._find == False:
             self.win.find_window_wildcard(".*Revision.*ID.*")
         self.role_status = abel_window.s_in_team
-        self.auto = False
+        self.fight = 0
+        self.begin_point = abel_map.point([90, 85],
+                                          abel_map.py.to('宝象国'),
+                                          'click_map',
+                                          d = [89, 85],
+                                          satisfy = '.\\resource\\bx_task.bmp',
+                                          satisfy_region = [],
+                                          satisfy_score = 0)
 
     def quit(self):
         self.quit = True
@@ -25,13 +32,14 @@ class xy2_baoxiang:
         self.auto = True
 
     def go_to_begin(self):
-        c = abel_map.city_map['bao xiang guo']
-        p = abel_map.point([90, 85], abel_map.py.to('宝象国'), 'click_map', d=[89, 85], s=2.0)
-        p.click()
-        time.sleep(0.5)
+        if self.win.check_region_score(self.begin_point.satisfy,
+                                       self.begin_point.satisfy_region,
+                                       self.begin_point.satisfy_score) == False:
+            self.begin_point.click()
 
     def accept_task(self):
-        print 'accept task'
+        self.go_to_begin()
+        abel_log.write_to_log('accept task')
         #get the task
         p2 = abel_map.point([[345,255],[258,358]], abel_map.py.to('宝象国'), 'click_double')
         p2.click()
@@ -52,7 +60,7 @@ class xy2_baoxiang:
             message = 'ERROR: ' + self.task
             abel_log.write_to_log(message)
             return '',[]
-        message = 'SUCCESS: ' + ' '.join(tmp2)
+        message = c + ' ' + ','.join(tmp2)
         abel_log.write_to_log(message)
         return abel_map.py.to(tmp2[0]), [int(tmp2[1]), int(tmp2[2])]
 
@@ -75,18 +83,22 @@ class xy2_baoxiang:
             message = 'ERROR: ' + self.task
             abel_log.write_to_log(message)
             return '',[],[]
-        message = 'SUCCESS: ' + ' '.join(tmp11) + ' '.join(tmp21)
+        message = c +' ' + ','.join(tmp11) + ' ' + ','.join(tmp21)
         abel_log.write_to_log(message)
         return abel_map.py.to(c), [int(tmp11[0]), int(tmp11[1])], [int(tmp21[0]), int(tmp21[1])]
 
     def do_naomrl_task(self, router, pos, city):
         router.addDst(pos)
+        router.road[0].click_without_check()
+        self.check_drug()
         if router.go() == False:
             return False
         return self.attack(city, pos)
 
     def do_longma_task(self, router, pos1, pos2, city):
         router.addDst(pos1)
+        router.road[0].click_without_check()
+        self.check_drug()
         if router.go() == False:
             return False
         self.back_to_start()
@@ -102,7 +114,8 @@ class xy2_baoxiang:
             return self.attack(city, pos2)
 
     def cancel_task(self):
-        print 'cancel_task'
+        self.go_to_begin()
+        abel_log.write_to_log('cancel this task')
         # self.go_to_begin()
         pos = [[345,255],[249,375],[164,344]]
         for i in range(len(pos)):
@@ -110,7 +123,8 @@ class xy2_baoxiang:
             time.sleep(0.5)
 
     def cancel_task2(self):
-        print 'cancel_task2'
+        self.go_to_begin()
+        abel_log.write_to_log('cancel this task2')
         # self.go_to_begin()
         pos = [[345,255],[222,395],[170,343]]
         for i in range(len(pos)):
@@ -118,30 +132,25 @@ class xy2_baoxiang:
             time.sleep(0.5)
 
     def attack(self, c, pos):
-        # self.refresh()
         attack_points = abel_map.get_attack_points(c, pos)
         find_attack = False
         for p in attack_points:
             self.win.attack(p)
-            time.sleep(1)
+            time.sleep(2)
             if self.win.check_out_fight_in_team() == False:
+                abel_log.write_to_log('attack ' + str(p) + ' success')
                 find_attack = True
-                if self.auto:
-                    self.auto = False
+                self.fight += 1
+                if self.fight % 5 == 0:
                     self.win.clickAuto(self.count)
                 break
+            else:
+                abel_log.write_to_log('attack ' + str(p) + ' fail')
         while find_attack:
             if self.win.check_out_fight_in_team() == True:
-                # for index in range(4):
-                    # if self.win.checkBlueEnough() == False:
-                        # self.win.drinkBlue()
-                    # if self.win.checkRedEnough() == False:
-                            # self.win.drinkRed()
-                    # pyautogui.keyDown('ctrl')
-                    # pyautogui.press('tab')
-                    # pyautogui.keyUp('ctrl')
                 time.sleep(0.5)
                 self.back_to_start()
+                abel_log.write_to_log('back to start')
                 break
             time.sleep(0.1)
         return find_attack
@@ -176,23 +185,12 @@ class xy2_baoxiang:
         pyautogui.keyUp('alt')
         time.sleep(0.1)
 
-    def removeTip(self):
-        pyautogui.keyDown('alt')
-        pyautogui.press('e')
-        pyautogui.keyUp('alt')
-        time.sleep(0.25)
-        self.win.click([348,385])
-        time.sleep(0.25)
-        pyautogui.keyDown('alt')
-        pyautogui.press('e')
-        pyautogui.keyUp('alt')
+    def check_drug(self):
+        self.win.drinkDrug(self.count)
 
     def excute_one_task(self):
         result = False
-        self.go_to_begin()
-        try_count = 0
-        while try_count < 10:
-            try_count += 1
+        for i in range(5):
             self.accept_task()
             if self.task[0:3] == '前' and self.task[3:6] == '往':
                 c,pos1,pos2 = self.analize_longma_task()
@@ -200,8 +198,6 @@ class xy2_baoxiang:
                 if router is None:
                     self.cancel_task()
                     continue
-                message = 'task: ' + c + '(%d,%d) (%d,%d)' % (pos1[0],pos1[1],pos2[0],pos2[1])
-                abel_log.write_to_log(message, to_screen = True)
                 result = self.do_longma_task(router, pos1, pos2, c)
             elif self.task[0:3] == '三':
                 c,pos = self.analize_normal_task()
@@ -209,24 +205,17 @@ class xy2_baoxiang:
                 if router is None:
                     self.cancel_task()
                     continue
-                message = 'task: ' + c + '(%d,%d)' % (pos[0],pos[1])
-                abel_log.write_to_log(message, to_screen = True)
                 result = self.do_naomrl_task(router, pos, c)
             elif self.task[0:3] == '义':
                 self.cancel_task2()
                 continue
             else:
-                break
-                # self.refresh()
-                # self.go_to_begin()
+                self.refresh()
+                self.go_to_begin()
             break
         return result
 
     def run_task(self):
-        drink_drug          = False
-        in_out_fight_count  = 0
-        out_fight_count     = 0
-        check_in_team_count = 0
         if self.win._find == False:
             print 'can\'t find xy2 window.'
             return False
@@ -234,8 +223,7 @@ class xy2_baoxiang:
         self.win.set_foreground()
         while self.bquit == False:
             try:
-                if self.role_status == abel_window.s_in_team:
-                    if self.excute_one_task() == False:
-                        self.role_status = abel_window.s_not_moved
+                if self.excute_one_task() == False:
+                    break
             except:
                 pass

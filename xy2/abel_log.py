@@ -4,7 +4,7 @@
 def printGbk(text):
     print text.decode('utf-8').encode('gbk')
 
-def write_to_log(log_text, to_screen = False):
+def write_to_log(log_text, to_screen = True):
     if to_screen:
         printGbk(log_text)
     f = open('.\\auto\\log.txt', 'a')

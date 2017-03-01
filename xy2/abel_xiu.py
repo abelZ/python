@@ -60,12 +60,7 @@ class xy2_xiu:
 
                     if drink_drug:
                         drink_drug = False
-                        if w.checkBlueEnough() == False:
-                            print "drink drug"
-                            w.drinkBlue()
-                        if w.checkRedEnough() == False:
-                            print 'drink red'
-                            w.drinkRed()
+                        w.drinkDrug()
             except:
                 pass
 
