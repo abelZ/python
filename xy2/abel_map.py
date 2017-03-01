@@ -68,7 +68,7 @@ class point:
                  c,
                  e,
                  d=None,
-                 py = None,
+                 pinyin = None,
                  satisfy=None,
                  satisfy_region=None,
                  satisfy_score=0):
@@ -111,12 +111,12 @@ class point:
                 time.sleep(0.75)
                 abel_window.xy2_win.click([677,493])
                 time.sleep(0.25)
-        elif self.event == 'click_double':
+        elif self.event == 'click_multiple':
             for i in range(len(self.pos)):
                 abel_window.xy2_win.click(self.pos[i])
                 time.sleep(0.5)
             result = True
-        elif self.event == 'right_click_double':
+        elif self.event == 'right_click_multiple':
             abel_window.xy2_win.rightClick(self.pos[0])
             time.sleep(0.5)
             for i in range(len(self.pos)):
@@ -137,12 +137,12 @@ class point:
                 abel_window.xy2_win.click()
             time.sleep(0.5)
             abel_window.xy2_win.click(self.pos)
-            time.sleep(0.5)
+            time.sleep(0.25)
+            pyautogui.hotkey('alt', '2')
+            time.sleep(0.25)
             abel_window.xy2_win.rightClick()
-            return self.check_arrival()
+            result = self.check_arrival()
 
-        if self.wait > 0.0:
-            time.sleep(self.wait)
         return result
 
     def check_arrival(self):
@@ -191,29 +191,6 @@ class point:
 
         return arrival
 
-p_bx_che_up = point([77, 136],
-                  py.to('宝象国'),
-                  'click_map',
-                  d = [77, 136],
-                  satisfy = '.\\resource\\bx_che1.bmp',
-                  satisfy_region = [],
-                  satisfy_score = 0)
-
-p_bx_che_down = point([222,21],
-                  py.to('宝象国'),
-                  'click_map',
-                  d=[221,21],
-                  satisfy = '.\\resource\\bx_che2.bmp',
-                  satisfy_region = [],
-                  satisfy_score = 0)
-
-p_bx_che_up2hy = point([[387, 183], [233, 377]], py.to('宝象国'), 'click_double')
-p_bx_che_down2pds = point([[247,161],[259,379]], py.to('宝象国'), 'click_double')
-p_bx_che_down2ca = point([[247,161],[211,396]], py.to('宝象国'), 'click_double')
-p_ca_ta2che = point([[362,239],[224,353]], py.to('长安城'), 'click_double')
-p_ca_ta2hg = point([[362,239],[230,405]], py.to('长安城'), 'click_double')
-p_ly_jishi2ss = point([[363,247],[218,363]], py.to('洛阳城'), 'click_double')
-
 def get_attack_points(city, coordinate):
     max_w = 19
     max_h = 14
@@ -260,8 +237,7 @@ class xy2_map:
 class xy2_map_bx_hygb(xy2_map):
     def __init__(self):
         self.route = [
-            p_bx_che_up,
-            p_bx_che_up2hy
+            point([TODO], py.to('宝象国'), 'auto_road', d=[TODO], pinyin='hygb ')
         ]
 
     def addDst(self, pos):
@@ -271,8 +247,7 @@ class xy2_map_bx_hygb(xy2_map):
 class xy2_map_bx_pds(xy2_map):
     def __init__(self):
         self.route = [
-            p_bx_che_down,
-            p_bx_che_down2pds
+            point([TODO], py.to('宝象国'), 'auto_road', d=[TODO], pinyin='pds ')
         ]
 
     def addDst(self, pos):
@@ -282,11 +257,7 @@ class xy2_map_bx_pds(xy2_map):
 class xy2_map_bx_ssz(xy2_map):
     def __init__(self):
         self.route = [
-            p_bx_che_down,
-            p_bx_che_down2ca,
-            p_ca_ta2che,
-            point([[356,268],[240,411]], py.to('长安城'), 'right_click_double'),
-            p_ly_jishi2ss
+            point([TODO], py.to('宝象国'), 'auto_road', d=[TODO], pinyin='ssz ')
         ]
 
     def addDst(self, pos):
@@ -296,10 +267,7 @@ class xy2_map_bx_ssz(xy2_map):
 class xy2_map_bx_wss(xy2_map):
     def __init__(self):
         self.route = [
-            p_bx_che_down,
-            p_bx_che_down2ca,
-            p_ca_ta2hg,
-            point([[359,237],[226,428]], py.to('长安城'), 'right_click_double')
+            point([TODO], py.to('宝象国'), 'auto_road', d=[TODO], pinyin='wss ')
         ]
 
     def addDst(self, pos):
@@ -309,10 +277,7 @@ class xy2_map_bx_wss(xy2_map):
 class xy2_map_bx_bgs(xy2_map):
     def __init__(self):
         self.route = [
-            p_bx_che_down,
-            p_bx_che_down2ca,
-            p_ca_ta2hg,
-            point([[359,237],[203,446]], py.to('长安城'), 'right_click_double'),
+            point([TODO], py.to('宝象国'), 'auto_road', d=[TODO], pinyin='bgs ')
             point([290,599], py.to('白骨洞'), 'click_right', d=[18,149])
         ]
 

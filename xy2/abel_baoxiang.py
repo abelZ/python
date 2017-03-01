@@ -41,7 +41,7 @@ class xy2_baoxiang:
         self.go_to_begin()
         abel_log.write_to_log('accept task')
         #get the task
-        p2 = abel_map.point([[345,255],[258,358]], abel_map.py.to('宝象国'), 'click_double')
+        p2 = abel_map.point([[345,255],[258,358]], abel_map.py.to('宝象国'), 'click_multiple')
         p2.click()
         #close the task window
         self.refresh()
