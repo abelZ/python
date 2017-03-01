@@ -15,6 +15,8 @@ class xy2_baoxiang:
         self.win = abel_window.xy2_win
         if self.win._find == False:
             self.win.find_window_wildcard(".*Revision.*ID.*")
+            self.win.check_out_fight_in_team()
+            self.win.check_if_in_fight()
         self.role_status = abel_window.s_in_team
         self.fight = 0
         self.begin_point = abel_map.point([90, 85],
@@ -22,8 +24,8 @@ class xy2_baoxiang:
                                           'click_map',
                                           d = [89, 85],
                                           satisfy = '.\\resource\\bx_task.bmp',
-                                          satisfy_region = [],
-                                          satisfy_score = 0)
+                                          satisfy_region = [220,65,288,146],
+                                          satisfy_score = 19000000.0)
 
     def quit(self):
         self.quit = True
@@ -136,8 +138,8 @@ class xy2_baoxiang:
         find_attack = False
         for p in attack_points:
             self.win.attack(p)
-            time.sleep(2)
-            if self.win.check_out_fight_in_team() == False:
+            time.sleep(1)
+            if self.win.check_if_in_fight() == True:
                 abel_log.write_to_log('attack ' + str(p) + ' success')
                 find_attack = True
                 self.fight += 1
@@ -174,12 +176,13 @@ class xy2_baoxiang:
         pyautogui.keyDown('alt')
         pyautogui.press('e')
         pyautogui.keyUp('alt')
-        time.sleep(0.5)
+        time.sleep(0.25)
         self.win.click([348,385])
         time.sleep(0.5)
         self.win.rightClick([203,543])
         time.sleep(0.5)
         self.win.click([187,480])
+        time.sleep(0.25)
         pyautogui.keyDown('alt')
         pyautogui.press('e')
         pyautogui.keyUp('alt')
