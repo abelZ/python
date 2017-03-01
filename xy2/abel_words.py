@@ -167,6 +167,7 @@ def get_coordinate_text(f=None):
             replace('!', '7').\
             replace('U', '0').\
             replace('O', '0').\
+            replace('o', '0').\
             replace('I', '1').\
             replace('l', '1').\
             replace('\xe5\x99\xbb', '4').\
