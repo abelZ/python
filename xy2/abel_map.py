@@ -145,7 +145,7 @@ class point:
             result = self.check_arrival()
             if result == True and len(self.pos) > 1:
                 abel_window.xy2_win.click(self.pos[1])
-                time.sleep(0.75)
+                time.sleep(1.0)
 
         return result
 

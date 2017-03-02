@@ -180,7 +180,7 @@ class xy2_baoxiang:
         self.win.click([348,385])
         time.sleep(0.5)
         self.win.rightClick([203,543])
-        time.sleep(0.5)
+        time.sleep(0.75)
         self.win.click([187,480])
         time.sleep(0.25)
         pyautogui.keyDown('alt')
@@ -212,9 +212,6 @@ class xy2_baoxiang:
             elif self.task[0:3] == '义':
                 self.cancel_task2()
                 continue
-            else:
-                self.refresh()
-                self.go_to_begin()
             break
         return result
 
