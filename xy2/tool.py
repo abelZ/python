@@ -10,6 +10,12 @@ from multiprocessing import freeze_support
 import cv2
 import winsound, ctypes
 
+def can_see(p1, p2):
+    if abs(p1[0] - p2[0]) <= 20 and abs(p1[1] - p2[1]) <= 15:
+        return True
+    else:
+        return False
+
 if __name__ == '__main__':
     freeze_support()
     w = abel_window.xy2_win
@@ -93,8 +99,38 @@ if __name__ == '__main__':
         # m = abel_map.src_bx_map.get('ping ding shan')
         # m.addDst([100, 110])
         # m.go()
-        t = abel_baoxiang.xy2_baoxiang(4)
-        t.excute_one_task()
+        start = [12,7]
+        dst = [67,37]
+        r1 = [[39,23],[59,32]]
+        r2 = [[13,28], [20,40]]
+        r3 = [[39,7], [60,14], [74,25]]
+        rs = [r1, r2, r3]
+        r = []
+        if can_see(start, dst) == True:
+            pass
+        else:
+            find = False
+            for i in range(len(rs)):
+                for j in range(len(rs[i])):
+                    if can_see(dst, rs[i][j]):
+                        find = True
+                        r.append(rs[i][j])
+                        break
+                    else:
+                        r.append(rs[i][j])
+                if find == True:
+                    break
+                else:
+                    r = []
+        pos = abel_map.get_attack_points('huo yun dong', start)[0]
+        pos1 = [pos[0]+(r[0][0]-start[0])*20, pos[1]-(r[0][1]-start[1])*20]
+        print pos, pos1
+        abel_window.xy2_win.rightClick(pos1)
+        time.sleep(10)
+        pos2 = abel_map.get_attack_points('huo yun dong', r[0])[0]
+        pos3 = [pos2[0]+(r[1][0]-r[0][0])*20, pos2[1]-(r[1][1]-r[0][1])*20]
+        print pos2, pos3
+        abel_window.xy2_win.rightClick(pos3)
         print 'cost %.2f' % (time.clock() - t0)
         # pyautogui.press('s')
         # pyautogui.press('s')
@@ -115,6 +151,8 @@ if __name__ == '__main__':
         # w.drinkBlue()
         # w.drinkRed()
     elif sys.argv[1] == 'capture':
-        cv_image,w,h = w.grabImage()
-        cv2.imwrite(sys.argv[2], cv_image)
+        t = abel_baoxiang.xy2_baoxiang(5)
+        t.run_task()
+        # cv_image,w,h = w.grabImage()
+        # cv2.imwrite(sys.argv[2], cv_image)
 

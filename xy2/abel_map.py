@@ -54,12 +54,13 @@ class xy2_city:
         self.s_map_max_coordinate = max_cd
 
 city_map = {
-    py.to('火云戈壁') : xy2_city([161,487], [278,166], [1.76,1.75]),
+    py.to('火云洞') : xy2_city([0,0], [89,60], [0,0]),
+    py.to('火云戈壁') : xy2_city([161,487], [280,165], [1.76,1.75]),
     py.to('宝象国') : xy2_city([157,507], [328,216], [1.513,1.51]),
-    py.to('平顶山') : xy2_city([158,484], [318,180], [1.55,1.57]),
-    py.to('四圣庄') : xy2_city([263,480], [222,216], [1.28,1.27]),
+    py.to('平顶山') : xy2_city([158,484], [320,180], [1.55,1.57]),
+    py.to('四圣庄') : xy2_city([263,480], [224,216], [1.28,1.27]),
     py.to('万寿山') : xy2_city([222,481], [224,168], [1.64,1.65]),
-    py.to('白骨山') : xy2_city([197,480], [254,168], [1.63,1.63])
+    py.to('白骨山') : xy2_city([197,480], [256,168], [1.63,1.63])
 }
 
 class point:
@@ -68,6 +69,7 @@ class point:
                  c,
                  e,
                  d=None,
+                 num=1,
                  pinyin = None,
                  satisfy=None,
                  satisfy_region=None,
@@ -75,6 +77,7 @@ class point:
         self.pos = p
         self.city = c
         self.event = e
+        self.count = num
         self.dst = d
         self.pinyin = pinyin
         self.satisfy = None
@@ -105,6 +108,8 @@ class point:
             time.sleep(0.25)
             c = city_map[self.city]
             abel_window.xy2_win.click_smap(self.pos, c.s_map_min_pos, c.s_map_scale)
+            time.sleep(0.25)
+            abel_window.xy2_win.drinkDrug(self.count)
             result = self.check_arrival()
             abel_window.xy2_win.click([672,613])
             time.sleep(0.75)
@@ -127,8 +132,9 @@ class point:
             result = self.check_arrival()
         elif self.event == 'auto_road':
             pyautogui.hotkey('alt', '2')
-            time.sleep(0.75)
-            abel_window.xy2_win.click([209,544])
+            time.sleep(0.5)
+            abel_window.xy2_win.click([176,536])
+            time.sleep(0.5)
             pyautogui.typewrite(self.pinyin, 0.25)
             pyautogui.press('enter')
             for i in range(3):
@@ -177,6 +183,7 @@ class point:
                 abel_log.write_to_log(text)
                 if text == last_text:
                     abel_log.write_to_log('same text detected, exit road!')
+                    arrival = True
                     break
                 last_text = text
 
@@ -190,6 +197,7 @@ class point:
                     self.satisfy_score
                 ) == True:
                     arrival = True
+                    time.sleep(1.0)
                     break
             if arrival == False:
                 abel_log.write_to_log('can not find satisfy region')
@@ -219,14 +227,14 @@ def get_attack_points(city, coordinate):
     elif cord[1] > max_cd[1]-max_h:
         center[1] = center[1] - (cord[1]+max_h-max_cd[1])*20
 
-    return [center, [center[0]+20, center[1]], [center[0]-20, center[1]]]
+    return [center, [center[0]+40, center[1]], [center[0]-20, center[1]]]
 
 class xy2_map:
     def __init__(self):
         self.road = []
         pass
 
-    def addDst(self, pos):
+    def addDst(self, pos, count):
         pass
 
     def go(self):
@@ -246,9 +254,9 @@ class xy2_map_bx_hygb(xy2_map):
             point([[358,391],[204,376]], py.to('宝象国'), 'auto_road', d=[20,100], pinyin='huoygb ')
         ]
 
-    def addDst(self, pos):
+    def addDst(self, pos, count):
         self.road = [r for r in self.route]
-        self.road.append(point(pos, py.to('火云戈壁'), 'fly_click_map', d=pos))
+        self.road.append(point(pos, py.to('火云戈壁'), 'fly_click_map', d=pos, num=count))
 
 class xy2_map_bx_pds(xy2_map):
     def __init__(self):
@@ -256,9 +264,9 @@ class xy2_map_bx_pds(xy2_map):
             point([[312,383],[203,360]], py.to('宝象国'), 'auto_road', d=[251,149], pinyin='pds ')
         ]
 
-    def addDst(self, pos):
+    def addDst(self, pos, count):
         self.road = [r for r in self.route]
-        self.road.append(point(pos, py.to('平顶山'), 'fly_click_map', d=pos))
+        self.road.append(point(pos, py.to('平顶山'), 'fly_click_map', d=pos, num=count))
 
 class xy2_map_bx_ssz(xy2_map):
     def __init__(self):
@@ -266,9 +274,9 @@ class xy2_map_bx_ssz(xy2_map):
             point([[354,392],[207,361]], py.to('宝象国'), 'auto_road', d=[360,68], pinyin='ssz ')
         ]
 
-    def addDst(self, pos):
+    def addDst(self, pos, count):
         self.road = [r for r in self.route]
-        self.road.append(point(pos, py.to('四圣庄'), 'fly_click_map', d=pos))
+        self.road.append(point(pos, py.to('四圣庄'), 'fly_click_map', d=pos, num=count))
 
 class xy2_map_bx_wss(xy2_map):
     def __init__(self):
@@ -276,9 +284,9 @@ class xy2_map_bx_wss(xy2_map):
             point([[349,392],[201,359]], py.to('宝象国'), 'auto_road', d=[253,91], pinyin='wss ')
         ]
 
-    def addDst(self, pos):
+    def addDst(self, pos, count):
         self.road = [r for r in self.route]
-        self.road.append(point(pos, py.to('万寿山'), 'fly_click_map', d=pos))
+        self.road.append(point(pos, py.to('万寿山'), 'fly_click_map', d=pos, num=count))
 
 class xy2_map_bx_bgs(xy2_map):
     def __init__(self):
@@ -286,9 +294,9 @@ class xy2_map_bx_bgs(xy2_map):
             point([[339,392]], py.to('宝象国'), 'auto_road', d=[18,149], pinyin='bgs ')
         ]
 
-    def addDst(self, pos):
+    def addDst(self, pos, count):
         self.road = [r for r in self.route]
-        self.road.append(point(pos, py.to('白骨山'), 'fly_click_map', d=pos))
+        self.road.append(point(pos, py.to('白骨山'), 'fly_click_map', d=pos, num=count))
 
 src_bx_map = {
     # py.to('火云洞') : xy2_map_bx_byd(),

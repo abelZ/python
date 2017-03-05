@@ -60,7 +60,8 @@ class xy2_xiu:
 
                     if drink_drug:
                         drink_drug = False
-                        w.drinkDrug()
-            except:
+                        w.drinkDrug(self.count)
+            except Exception as e:
+                print e
                 pass
 

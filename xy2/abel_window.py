@@ -28,7 +28,8 @@ blue_enough_pos  = [755, 89, 757, 90]#[730,89,800,90]
 red_enough_pos   = [770, 74, 772, 75]#[730,74,800,75]
 
 wild_pos         = [[283,231], [468,283], [378,451], [270,388], [530,367]]
-nao_pos          = [[216,274], [236,210], [230,163]]#hua 282,42
+# nao_pos          = [[216,274], [236,210], [230,163]]#hua 282,42
+nao_pos          = [[222,386], [222,356], [227,332]]#hua ben 365,71
 
 blue_range       = [0, 100]
 
@@ -70,19 +71,13 @@ class WindowMgr:
 
     def clickAuto(self, count):
         for i in range(count):
-            pyautogui.keyDown('alt')
-            pyautogui.press('8')
-            pyautogui.keyUp('alt')
+            pyautogui.hotkey('alt', '8')
             if count > 1:
                 time.sleep(0.1)
-                pyautogui.keyDown('ctrl')
-                pyautogui.press('tab')
-                pyautogui.keyUp('ctrl')
+                pyautogui.hotkey('ctrl', 'tab')
 
     def clickDrug(self, pos):
-        pyautogui.keyDown('alt')
-        pyautogui.press('e')
-        pyautogui.keyUp('alt')
+        pyautogui.hotkey('alt', 'e')
         time.sleep(0.25)
         pyautogui.click(self.x+348,self.y+385)
         time.sleep(0.25)
@@ -97,9 +92,7 @@ class WindowMgr:
             )
         )
         time.sleep(0.25)
-        pyautogui.keyDown('alt')
-        pyautogui.press('e')
-        pyautogui.keyUp('alt')
+        pyautogui.hotkey('alt', 'e')
 
     def drinkBlue(self):
         time.sleep(0.1)
@@ -117,9 +110,7 @@ class WindowMgr:
                 self.drinkRed()
             if count > 1:
                 time.sleep(0.1)
-                pyautogui.keyDown('ctrl')
-                pyautogui.press('tab')
-                pyautogui.keyUp('ctrl')
+                pyautogui.hotkey('ctrl', 'tab')
 
     def grabImage(self, box):
         absBox = [self.x+box[0], self.y+box[1], self.x+box[2], self.y+box[3]]
@@ -151,18 +142,21 @@ class WindowMgr:
                            numpy.array([blue_range[1]], dtype='uint8'))
         return cv2.countNonZero(mask) == w*h
 
-    def check_out_fight_in_team(self):
+    def check_cache(self):
         if self.template_cache == False:
             self.template_cache = True
             self.team_template,w,h = self.grabImage(head_pos)
             self.anim_template,w,h = self.grabImage(animal_pos)
 
+    def check_out_fight_in_team(self):
+        self.check_cache()
         cv_team,w,h = self.grabImage(team_pos)
         res = cv2.matchTemplate(cv_team, self.team_template, eval('cv2.TM_CCOEFF'))
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
-        return max_val >= 15000000.0
+        return max_val >= 18000000.0
 
     def check_if_in_fight(self):
+        self.check_cache()
         cv_fight,w,h = self.grabImage(animal_fight_pos)
         res = cv2.matchTemplate(cv_fight, self.anim_template, eval('cv2.TM_CCOEFF'))
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
@@ -192,20 +186,23 @@ class WindowMgr:
                 )
             )
             time.sleep(0.2)
+            pyautogui.rightClick(self.x+red_pos[0]-100,
+                                 self.y+red_pos[1])
+            time.sleep(0.2)
+            pyautogui.rightClick(self.x+blue_pos[0]-100,
+                                 self.y+blue_pos[1])
+            time.sleep(0.2)
             if count > 1:
-                pyautogui.keyDown('ctrl')
-                pyautogui.press('tab')
-                pyautogui.keyUp('ctrl')
+                pyautogui.hotkey('ctrl', 'tab')
+                # pyautogui.press('tab')
+                # pyautogui.keyUp('ctrl')
 
     def attack(self, pos):
-        pyautogui.keyDown('alt')
-        pyautogui.keyDown('a')
+        pyautogui.hotkey('alt', 'a')
         try:
             pyautogui.click(self.x+pos[0], self.y+pos[1])
         except:
             pass
-        # pyautogui.keyUp('a')
-        # pyautogui.keyUp('alt')
 
     def click(self, pos):
         try:
@@ -224,18 +221,14 @@ class WindowMgr:
             int(begin[0]+pos[0]*scale[0]),
             int(begin[1]-pos[1]*scale[1])
         ]
-        pyautogui.keyDown('alt')
-        pyautogui.press('1')
-        pyautogui.keyUp('alt')
+        pyautogui.hotkey('alt', '1')
         time.sleep(0.75)
         try:
             pyautogui.click(self.x+relative_pos[0], self.y+relative_pos[1])
         except:
             pass
         time.sleep(0.25)
-        pyautogui.keyDown('alt')
-        pyautogui.press('1')
-        pyautogui.keyUp('alt')
+        pyautogui.hotkey('alt', '1')
 
     def check_region_score(self, template, region, score):
         cv_region,w,h = self.grabImage(region)

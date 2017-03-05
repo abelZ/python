@@ -15,8 +15,8 @@ class xy2_baoxiang:
         self.win = abel_window.xy2_win
         if self.win._find == False:
             self.win.find_window_wildcard(".*Revision.*ID.*")
-            self.win.check_out_fight_in_team()
-            self.win.check_if_in_fight()
+        self.win.set_foreground()
+        self.win.check_cache()
         self.role_status = abel_window.s_in_team
         self.fight = 0
         self.begin_point = abel_map.point([90, 85],
@@ -25,7 +25,7 @@ class xy2_baoxiang:
                                           d = [89, 85],
                                           satisfy = '.\\resource\\bx_task.bmp',
                                           satisfy_region = [220,65,288,146],
-                                          satisfy_score = 19000000.0)
+                                          satisfy_score = 20000000.0)
 
     def quit(self):
         self.quit = True
@@ -43,8 +43,10 @@ class xy2_baoxiang:
         self.go_to_begin()
         abel_log.write_to_log('accept task')
         #get the task
-        p2 = abel_map.point([[345,255],[258,358]], abel_map.py.to('宝象国'), 'click_multiple')
-        p2.click()
+        pos = [[345,255],[258,358]]
+        for i in range(len(pos)):
+            self.win.click(pos[i])
+            time.sleep(0.75)
         #close the task window
         self.refresh()
         #recognize the task by tesseract
@@ -62,8 +64,7 @@ class xy2_baoxiang:
             message = 'ERROR: ' + self.task
             abel_log.write_to_log(message)
             return '',[]
-        message = c + ' ' + ','.join(tmp2)
-        abel_log.write_to_log(message)
+        abel_log.write_to_log(tmp1)
         return abel_map.py.to(tmp2[0]), [int(tmp2[1]), int(tmp2[2])]
 
     def analize_longma_task(self):
@@ -90,29 +91,23 @@ class xy2_baoxiang:
         return abel_map.py.to(c), [int(tmp11[0]), int(tmp11[1])], [int(tmp21[0]), int(tmp21[1])]
 
     def do_naomrl_task(self, router, pos, city):
-        router.addDst(pos)
-        router.road[0].click_without_check()
-        self.check_drug()
+        router.addDst(pos, self.count)
         if router.go() == False:
             return False
         return self.attack(city, pos)
 
     def do_longma_task(self, router, pos1, pos2, city):
-        router.addDst(pos1)
-        router.road[0].click_without_check()
-        self.check_drug()
+        router.addDst(pos1, self.count)
         if router.go() == False:
             return False
         self.back_to_start()
         refresh_task = abel_words.get_bxxm_task_description()
         if refresh_task[0:3] == '白':
-            self.refresh()
             return self.attack(city, pos1)
         else:
-            p = abel_map.point(pos2, city, 'click_map', d=pos2, fly=True)
+            p = abel_map.point(pos2, city, 'fly_click_map', d=pos2)
             p.click()
             self.back_to_start()
-            self.refresh()
             return self.attack(city, pos2)
 
     def cancel_task(self):
@@ -122,7 +117,7 @@ class xy2_baoxiang:
         pos = [[345,255],[249,375],[164,344]]
         for i in range(len(pos)):
             self.win.click(pos[i])
-            time.sleep(0.5)
+            time.sleep(0.75)
 
     def cancel_task2(self):
         self.go_to_begin()
@@ -131,7 +126,7 @@ class xy2_baoxiang:
         pos = [[345,255],[222,395],[170,343]]
         for i in range(len(pos)):
             self.win.click(pos[i])
-            time.sleep(0.5)
+            time.sleep(0.75)
 
     def attack(self, c, pos):
         attack_points = abel_map.get_attack_points(c, pos)
@@ -159,33 +154,30 @@ class xy2_baoxiang:
 
     def back_to_start(self):
         time.sleep(0.1)
-        pyautogui.keyDown('alt')
-        pyautogui.press('e')
-        pyautogui.keyUp('alt')
-        time.sleep(0.5)
+        pyautogui.hotkey('alt', 'e')
+        time.sleep(0.75)
         self.win.click([348,557])
-        time.sleep(0.5)
-        self.win.rightClick([310,442])
-        pyautogui.keyDown('alt')
-        pyautogui.press('e')
-        pyautogui.keyUp('alt')
+        time.sleep(0.75)
+        self.win.rightClick([209,445])
+        time.sleep(0.75)
+        self.win.click([348,385])
+        time.sleep(0.25)
+        self.win.click([348,385])
+        time.sleep(0.25)
+        pyautogui.hotkey('alt', 'e')
         time.sleep(0.1)
 
     def refresh(self):
         time.sleep(0.1)
-        pyautogui.keyDown('alt')
-        pyautogui.press('e')
-        pyautogui.keyUp('alt')
-        time.sleep(0.25)
+        pyautogui.hotkey('alt', 'e')
+        time.sleep(0.75)
         self.win.click([348,385])
-        time.sleep(0.5)
+        time.sleep(0.75)
         self.win.rightClick([203,543])
         time.sleep(0.75)
         self.win.click([187,480])
         time.sleep(0.25)
-        pyautogui.keyDown('alt')
-        pyautogui.press('e')
-        pyautogui.keyUp('alt')
+        pyautogui.hotkey('alt', 'e')
         time.sleep(0.1)
 
     def check_drug(self):
@@ -220,10 +212,13 @@ class xy2_baoxiang:
             print 'can\'t find xy2 window.'
             return False
 
-        self.win.set_foreground()
-        while self.bquit == False:
+        while self.quit == False:
             try:
+                t0 = time.clock()
                 if self.excute_one_task() == False:
                     break
-            except:
+                print 'cost %.2f' % (time.clock() - t0)
+            except Exception as e:
+                print e
+                break
                 pass
