@@ -11,7 +11,7 @@ import win32gui
 
 import abel_window, abel_xiu, abel_wild, abel_nao, abel_bidou
 
-xiu_task = abel_xiu.xy2_xiu()
+xiu_task = abel_xiu.xy2_xiu(number=1)
 wild_task = abel_wild.xy2_wild()
 nao_task = abel_nao.xy2_nao(number=5)
 bidou_task = abel_bidou.xy2_bidou(number=4)

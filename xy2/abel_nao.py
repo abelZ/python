@@ -56,7 +56,7 @@ class xy2_nao:
                         w.full_blue_red(self.count)
 
                     out_fight_count = out_fight_count + 1
-                    if out_fight_count == 10:
+                    if out_fight_count == 20:
                         out_fight_count = 0
                         self.role_status = abel_window.s_not_moved
                         status_change_by_out = True

@@ -6,6 +6,7 @@ import cv2
 import pyscreenshot as ImageGrab
 import pyautogui
 import win32gui
+import winsound, ctypes
 import time, random
 
 class xy2_baoxiang:
@@ -158,7 +159,10 @@ class xy2_baoxiang:
         time.sleep(0.75)
         self.win.click([348,557])
         time.sleep(0.75)
-        self.win.rightClick([209,445])
+        self.win.rightClick([156,440])#3
+        # self.win.rightClick([206,440])#4
+        # self.win.rightClick([256,440])#5
+        # self.win.rightClick([306,440])#6
         time.sleep(0.75)
         self.win.click([348,385])
         time.sleep(0.25)
@@ -185,6 +189,7 @@ class xy2_baoxiang:
 
     def excute_one_task(self):
         result = False
+        self.check_drug()
         for i in range(5):
             self.accept_task()
             if self.task[0:3] == '前' and self.task[3:6] == '往':
@@ -216,6 +221,7 @@ class xy2_baoxiang:
             try:
                 t0 = time.clock()
                 if self.excute_one_task() == False:
+                    winsound.PlaySound('.\\resource\\not_moved.wav', winsound.SND_FILENAME)
                     break
                 print 'cost %.2f' % (time.clock() - t0)
             except Exception as e:

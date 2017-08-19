@@ -28,8 +28,9 @@ blue_enough_pos  = [755, 89, 757, 90]#[730,89,800,90]
 red_enough_pos   = [770, 74, 772, 75]#[730,74,800,75]
 
 wild_pos         = [[283,231], [468,283], [378,451], [270,388], [530,367]]
-# nao_pos          = [[216,274], [236,210], [230,163]]#hua 282,42
-nao_pos          = [[222,386], [222,356], [227,332]]#hua ben 365,71
+nao_pos          = [[216,274], [236,210], [230,163]]#hua 282,42
+# nao_pos          = [[222,386], [222,356], [227,332]]#hua ben 365,71
+# nao_pos          = [[263,80], [238,118], [294,147]]#tian 152,293
 
 blue_range       = [0, 100]
 
@@ -153,7 +154,8 @@ class WindowMgr:
         cv_team,w,h = self.grabImage(team_pos)
         res = cv2.matchTemplate(cv_team, self.team_template, eval('cv2.TM_CCOEFF'))
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
-        return max_val >= 18000000.0
+        print max_val
+        return max_val >= 15000000.0
 
     def check_if_in_fight(self):
         self.check_cache()
@@ -227,7 +229,7 @@ class WindowMgr:
             pyautogui.click(self.x+relative_pos[0], self.y+relative_pos[1])
         except:
             pass
-        time.sleep(0.25)
+        time.sleep(0.5)
         pyautogui.hotkey('alt', '1')
 
     def check_region_score(self, template, region, score):

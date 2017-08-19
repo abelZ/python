@@ -150,9 +150,23 @@ if __name__ == '__main__':
         # print w.checkBlueEnough()
         # w.drinkBlue()
         # w.drinkRed()
-    elif sys.argv[1] == 'capture':
-        t = abel_baoxiang.xy2_baoxiang(5)
+    elif sys.argv[1] == '-capture':
+        t = abel_baoxiang.xy2_baoxiang(4)
         t.run_task()
         # cv_image,w,h = w.grabImage()
         # cv2.imwrite(sys.argv[2], cv_image)
+    elif sys.argv[1] == '-biao':
+        try:
+            while True:
+                time.sleep(1)
+                pyautogui.hotkey('alt', 'q')
+                time.sleep(1)
+                # w.click([209,471])
+                # time.sleep(1)
+                w.click([524,259])
+                time.sleep(1)
+                pyautogui.hotkey('alt', 'q')
+        except Exception as e:
+            print e
+
 

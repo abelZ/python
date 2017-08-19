@@ -102,6 +102,9 @@ class point:
             abel_window.xy2_win.click_smap(self.pos, c.s_map_min_pos, c.s_map_scale)
             result = self.check_arrival()
         elif self.event == 'fly_click_map':
+            # c = city_map[self.city]
+            # abel_window.xy2_win.click_smap(self.pos, c.s_map_min_pos, c.s_map_scale)
+            # result = self.check_arrival()
             abel_window.xy2_win.click([672,613])
             time.sleep(0.75)
             abel_window.xy2_win.click([677,493])
@@ -109,7 +112,11 @@ class point:
             c = city_map[self.city]
             abel_window.xy2_win.click_smap(self.pos, c.s_map_min_pos, c.s_map_scale)
             time.sleep(0.25)
-            abel_window.xy2_win.drinkDrug(self.count)
+            # abel_window.xy2_win.drinkDrug(self.count)
+            result = self.check_arrival()
+            if result == False:
+                abel_window.xy2_win.click_smap(self.pos, c.s_map_min_pos, c.s_map_scale)
+                time.sleep(0.25)
             result = self.check_arrival()
             abel_window.xy2_win.click([672,613])
             time.sleep(0.75)
@@ -135,7 +142,7 @@ class point:
             time.sleep(0.5)
             abel_window.xy2_win.click([176,536])
             time.sleep(0.5)
-            pyautogui.typewrite(self.pinyin, 0.25)
+            pyautogui.typewrite(self.pinyin, 0.1)
             pyautogui.press('enter')
             for i in range(3):
                 time.sleep(0.1)
@@ -163,6 +170,7 @@ class point:
         text = ''
         last_text = ''
         last_cord = []
+        i = 1
         while True:
             time.sleep(0.25)
             try:
@@ -175,8 +183,10 @@ class point:
                     break
                 else:
                     if cord == last_cord:
-                        abel_log.write_to_log('same coordinate detected, exit road!')
-                        break
+                        i += 1
+                        if i == 4:
+                            abel_log.write_to_log('same coordinate detected, exit road!')
+                            break
                 last_cord = cord
                 last_text = text
             except Exception as e:
@@ -251,7 +261,8 @@ class xy2_map:
 class xy2_map_bx_hygb(xy2_map):
     def __init__(self):
         self.route = [
-            point([[358,391],[204,376]], py.to('宝象国'), 'auto_road', d=[20,100], pinyin='huoygb ')
+            # point([[358,391],[204,376]], py.to('宝象国'), 'auto_road', d=[20,100], pinyin='huoygb ')
+            point([[343,355],[206,377]], py.to('宝象国'), 'auto_road', d=[80,143], pinyin='huoygb ')
         ]
 
     def addDst(self, pos, count):
